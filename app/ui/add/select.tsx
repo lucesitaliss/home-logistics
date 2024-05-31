@@ -26,7 +26,6 @@ export default function Select() {
       setCategories(categoriesData);
       const productsData = await databaseProducts();
       setProducts(productsData);
-      console.log("productsBD", productsData);
     }
 
     fetchDatabase();
