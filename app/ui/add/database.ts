@@ -1,6 +1,6 @@
 export async function databaseCategories() {
   const csv = await fetch(
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQyik0l3vRC2jHEnII_5CAejoW4jUNwPmJ6C7ebZZRdBIS8ciUzTmV1GGsvvXM5hHGCFk67Obqwf5o6/pub?gid=0&single=true&output=csv"
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQyik0l3vRC2jHEnII_5CAejoW4jUNwPmJ6C7ebZZRdBIS8ciUzTmV1GGsvvXM5hHGCFk67Obqwf5o6/pub?gid=184307761&single=true&output=csv"
   ).then((res) => res.text());
   return csv
     .split("\n")

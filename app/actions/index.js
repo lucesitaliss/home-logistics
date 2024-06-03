@@ -44,3 +44,34 @@ export async function addCategory(nameCategory) {
     throw new Error('Sheet named "categorias" not found');
   }
 }
+
+export async function deleteCategory(idCategory) {
+  await doc.loadInfo();
+  const sheetCategory = doc.sheetsByTitle["categories"];
+  if (sheetCategory) {
+    const rows = await sheetCategory.getRows();
+
+    const findRow = rows.find((row) => row._rawData[0] == idCategory);
+    if (findRow) {
+      await findRow.delete();
+    }
+  } else {
+    throw new Error('Sheet named "categories" not found');
+  }
+}
+
+export async function editCategory(idCategory, newNameCategory) {
+  await doc.loadInfo();
+  const sheetCategory = doc.sheetsByTitle["categories"];
+  if (sheetCategory) {
+    const rows = await sheetCategory.getRows();
+    const findRow = rows.find((row) => row._rawData[0] == idCategory);
+
+    if (findRow) {
+      findRow._rawData[1] = newNameCategory;
+      await findRow.save();
+    }
+  } else {
+    throw new Error(`No row found with id: ${idCategory}`);
+  }
+}

@@ -89,7 +89,7 @@ export default function Select() {
           </div>
         ))}
       </div>
-      <div className="flex gap-6">
+      {/* <div className="flex gap-6">
         <button className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-20">
           Editar
         </button>
@@ -99,7 +99,7 @@ export default function Select() {
         >
           Eliminar
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

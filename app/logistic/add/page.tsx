@@ -1,6 +1,5 @@
 import Select from "../../ui/add/select";
-
-import { SessionProvider } from "next-auth/react";
+import { editCategory } from "@/app/actions";
 import AddCategory from "../../ui/add/addCategory";
 
 export default async function Home() {
@@ -8,6 +7,9 @@ export default async function Home() {
     <main className="w-full min-h-screen">
       <Select />
       <AddCategory />
+      {/* <button onClick={() => editCategory("2", "prueba")}>
+        Editar Categoria
+      </button> */}
     </main>
   );
 }
