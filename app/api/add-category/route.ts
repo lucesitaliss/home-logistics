@@ -1,12 +1,13 @@
+import { NextResponse } from "next/server";
 import { addCategory } from "@/app/actions";
 
-export async function POST(req: Response, res: any) {
+export async function POST(req: Request) {
   try {
     const nameCategory = await req.json();
     await addCategory(nameCategory);
-    res.status(200).json({ message: "Success save data" });
+    return NextResponse.json({ message: "Success save data" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return NextResponse.json({ error: "Internal Server Error" });
   }
 }
