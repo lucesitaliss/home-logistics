@@ -1,16 +1,17 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
-import { databaseCategories, databaseProducts } from "./database";
+// import { databaseProducts } from "./database";
+import { getCategories, getProducts } from "@/app/actions";
 
 interface Category {
-  id: number;
+  id: string;
   name: string;
 }
 
 interface Product {
   id: number;
   name: string;
-  id_category: number;
+  id_category: string;
   checked: boolean;
 }
 
@@ -22,22 +23,25 @@ export default function Select() {
 
   useEffect(() => {
     async function fetchDatabase() {
-      const categoriesData = await databaseCategories();
+      const categoriesData = await getCategories();
       setCategories(categoriesData);
-      const productsData = await databaseProducts();
+
+      // const productsData = await databaseProducts();
+      // setProducts(productsData);
+      const productsData = await getProducts();
       setProducts(productsData);
     }
-
     fetchDatabase();
   }, []);
 
   useEffect(() => {
+    console.log("🚲", products);
     if (selectedCategory) {
-      const categoryID = parseInt(selectedCategory);
+      // const categoryID = parseInt(selectedCategory);
+      const categoryID = selectedCategory;
       setFilteredProducts(
         products.filter((product) => product.id_category === categoryID)
       );
-      console.log("products2", products, filteredProducts);
     } else {
       setFilteredProducts([]);
     }
@@ -49,12 +53,15 @@ export default function Select() {
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const productId = parseInt(event.target.id);
+    const productIdInt = parseInt(event.target.id);
+    const productId = event.target.id;
     const isChecked = event.target.checked;
 
     setProducts((prevProducts) =>
       prevProducts.map((product) =>
-        product.id === productId ? { ...product, checked: isChecked } : product
+        String(product.id) === productId
+          ? { ...product, checked: isChecked }
+          : product
       )
     );
   };
@@ -79,7 +86,7 @@ export default function Select() {
           <div key={product.id}>
             <label key={product.id}>
               <input
-                id={product.id.toString()}
+                id={product.id}
                 type="checkbox"
                 onChange={handleCheckboxChange}
                 checked={product.checked}

@@ -1,6 +1,6 @@
 "use server";
-import { signIn, signOut } from "../../auth";
 
+import { signIn, signOut } from "../../auth";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import jwt from "../lib/googleSheet";
 
@@ -12,6 +12,40 @@ export async function doGoogleLogin() {
 
 export async function doGoogleLogout() {
   await signOut("google");
+}
+//*********Products
+export async function getProducts() {
+  await doc.loadInfo();
+  const sheetproducts = doc.sheetsByTitle["products"];
+  if (sheetproducts) {
+    const rows = await sheetproducts.getRows();
+
+    const plainRows = rows.map((row) => ({
+      id: row._rawData[0],
+      name: row._rawData[1],
+      id_category: row._rawData[2],
+      checked: row._rawData[3],
+    }));
+    return plainRows;
+  } else {
+    throw new Error('Sheet named "categories" not found');
+  }
+}
+
+//*********Categories
+export async function getCategories() {
+  await doc.loadInfo();
+  const sheetCategories = doc.sheetsByTitle["categories"];
+  if (sheetCategories) {
+    const rows = await sheetCategories.getRows();
+    const plainRows = rows.map((row) => ({
+      id: row._rawData[0],
+      name: row._rawData[1],
+    }));
+    return plainRows;
+  } else {
+    throw new Error('Sheet named "categories" not found');
+  }
 }
 
 export async function addCategory(nameCategory) {
