@@ -9,18 +9,12 @@ export default async function Menu() {
   if (!session?.user) redirect("/");
 
   return (
-    <div className="bg-gray-700 p-2 flex justify-around text-white">
-      <div className="flex justify-center gap-20">
-        <Link href="/logistic/home">Inicio</Link>
-        <Link href="/logistic/list">Lista</Link>
-        <Link href="/logistic/add">Agregar</Link>
-        <Link href="/logistic/admin">Admin</Link>
-      </div>
-      <div className="flex justify-end gap-3">
+    <div className="bg-gray-700 p-2  justify-around text-white">
+      <div className="flex justify-center sm:justify-end gap-3 text-xs items-center">
         <form action={doGoogleLogout}>
           <button type="submit">Signin Out</button>
         </form>
-        <p>{session?.user?.name}</p>
+        <p className="hidden sm:block">{session?.user?.name}</p>
         {session?.user?.image && (
           <Image
             src={session.user.image}
@@ -30,6 +24,12 @@ export default async function Menu() {
             className="rounded-full"
           />
         )}
+      </div>
+      <div className="flex  justify-center gap-5 sm:gap-10 text-xs ">
+        <Link href="/logistic/home">Inicio</Link>
+        <Link href="/logistic/list">Lista</Link>
+        <Link href="/logistic/add">Agregar</Link>
+        <Link href="/logistic/admin">Admin</Link>
       </div>
     </div>
   );

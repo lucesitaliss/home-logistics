@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, SyntheticEvent } from "react";
-import { addCategory } from "@/app/actions/categories";
 
 export default function FormPrueba() {
   const [formData, setFormData] = useState<string>("");
