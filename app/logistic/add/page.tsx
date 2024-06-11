@@ -2,7 +2,7 @@ import Select from "../../ui/add/select";
 
 import AddCategory from "../../ui/add/addCategory";
 
-export default function Home() {
+export default function Add() {
   return (
     <main className="w-full min-h-screen">
       <Select />

@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
-// import { databaseProducts } from "./database";
-import { getCategories, getProducts } from "@/app/actions";
 
 interface Category {
   id: string;
@@ -9,7 +7,7 @@ interface Category {
 }
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   id_category: string;
   checked: boolean;
@@ -19,33 +17,51 @@ export default function Select() {
   const [selectedCategory, setSelectedCategoy] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    async function fetchDatabase() {
-      const categoriesData = await getCategories();
-      setCategories(categoriesData);
-
-      // const productsData = await databaseProducts();
-      // setProducts(productsData);
-      const productsData = await getProducts();
-      setProducts(productsData);
-    }
-    fetchDatabase();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
-    console.log("🚲", products);
-    if (selectedCategory) {
-      // const categoryID = parseInt(selectedCategory);
-      const categoryID = selectedCategory;
-      setFilteredProducts(
-        products.filter((product) => product.id_category === categoryID)
-      );
-    } else {
-      setFilteredProducts([]);
+    fetcProducts();
+  }, [selectedCategory]);
+
+  async function fetchCategories() {
+    try {
+      const categoriesRespone = await fetch("/api/categories/get-categories", {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      if (!categoriesRespone.ok) {
+        throw new Error("Error fetching categories");
+      }
+      const categoriesData = await categoriesRespone.json();
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
     }
-  }, [selectedCategory, products]);
+  }
+
+  async function fetcProducts() {
+    if (selectedCategory) {
+      const productsResponse = await fetch(
+        `/api/products/get-products-by-category?id_category=${selectedCategory}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      );
+      if (!productsResponse.ok) {
+        throw new Error("Error fetching productos by categories");
+      }
+      const productsData = await productsResponse.json();
+      setProducts(productsData);
+    }
+  }
 
   const handleSelectChange = (event: SyntheticEvent) => {
     const target = event.target as HTMLSelectElement;
@@ -53,7 +69,6 @@ export default function Select() {
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const productIdInt = parseInt(event.target.id);
     const productId = event.target.id;
     const isChecked = event.target.checked;
 
@@ -82,7 +97,7 @@ export default function Select() {
         ))}
       </select>
       <div className="pt-4">
-        {filteredProducts.map((product) => (
+        {products.map((product) => (
           <div key={product.id}>
             <label key={product.id}>
               <input

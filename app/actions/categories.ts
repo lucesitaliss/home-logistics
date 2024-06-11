@@ -1,46 +1,27 @@
 "use server";
 
-import { signIn, signOut } from "../../auth";
-import { GoogleSpreadsheet } from "google-spreadsheet";
+import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
 import jwt from "../lib/googleSheet";
 
-const doc = new GoogleSpreadsheet(process.env.NEXT_PUBLIC_SPREADSHEET_ID, jwt);
+const doc = new GoogleSpreadsheet(
+  process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
+  jwt
+);
 
-export async function doGoogleLogin() {
-  await signIn("google", { redirectTo: "/logistic" });
+interface Category {
+  id: string;
+  name: string;
 }
 
-export async function doGoogleLogout() {
-  await signOut("google");
-}
-//*********Products
-export async function getProducts() {
-  await doc.loadInfo();
-  const sheetproducts = doc.sheetsByTitle["products"];
-  if (sheetproducts) {
-    const rows = await sheetproducts.getRows();
-
-    const plainRows = rows.map((row) => ({
-      id: row._rawData[0],
-      name: row._rawData[1],
-      id_category: row._rawData[2],
-      checked: row._rawData[3],
-    }));
-    return plainRows;
-  } else {
-    throw new Error('Sheet named "categories" not found');
-  }
-}
-
-//*********Categories
-export async function getCategories() {
+export async function getCategories(): Promise<Category[]> {
   await doc.loadInfo();
   const sheetCategories = doc.sheetsByTitle["categories"];
+
   if (sheetCategories) {
     const rows = await sheetCategories.getRows();
-    const plainRows = rows.map((row) => ({
-      id: row._rawData[0],
-      name: row._rawData[1],
+    const plainRows: Category[] = rows.map((row: GoogleSpreadsheetRow) => ({
+      id: row.get("id") as string,
+      name: row.get("name") as string,
     }));
     return plainRows;
   } else {
@@ -48,15 +29,15 @@ export async function getCategories() {
   }
 }
 
-export async function addCategory(nameCategory) {
+export async function addCategory(nameCategory: string): Promise<void> {
   await doc.loadInfo();
   const sheet = doc.sheetsByTitle["categories"];
   if (sheet) {
     const rows = await sheet.getRows();
     let maxId = 0;
 
-    rows.forEach((row) => {
-      const rawId = row._rawData[0];
+    rows.forEach((row: GoogleSpreadsheetRow) => {
+      const rawId = row.get("id") as string;
       if (rawId) {
         const currentId = parseInt(rawId, 10);
         if (!isNaN(currentId) && currentId > maxId) {
@@ -79,13 +60,13 @@ export async function addCategory(nameCategory) {
   }
 }
 
-export async function deleteCategory(idCategory) {
+export async function deleteCategory(idCategory: string): Promise<void> {
   await doc.loadInfo();
   const sheetCategory = doc.sheetsByTitle["categories"];
   if (sheetCategory) {
     const rows = await sheetCategory.getRows();
 
-    const findRow = rows.find((row) => row._rawData[0] == idCategory);
+    const findRow = rows.find((row) => row.get("id") === idCategory);
     if (findRow) {
       await findRow.delete();
     }
@@ -94,15 +75,18 @@ export async function deleteCategory(idCategory) {
   }
 }
 
-export async function editCategory(idCategory, newNameCategory) {
+export async function editCategory(
+  idCategory: string,
+  newNameCategory: string
+): Promise<void> {
   await doc.loadInfo();
   const sheetCategory = doc.sheetsByTitle["categories"];
   if (sheetCategory) {
     const rows = await sheetCategory.getRows();
-    const findRow = rows.find((row) => row._rawData[0] == idCategory);
+    const findRow = rows.find((row) => row.get("id") === idCategory);
 
     if (findRow) {
-      findRow._rawData[1] = newNameCategory;
+      findRow.set("name", newNameCategory);
       await findRow.save();
     }
   } else {

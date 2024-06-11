@@ -1,4 +1,4 @@
-import { doGoogleLogin } from "../actions/index";
+import { doGoogleLogin } from "../actions/authenticate";
 
 export function Authenticate() {
   return (

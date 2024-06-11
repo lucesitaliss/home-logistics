@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { doGoogleLogout } from "../actions";
+import { doGoogleLogout } from "../actions/authenticate";
 import { auth } from "../../auth";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -11,7 +11,7 @@ export default async function Menu() {
   return (
     <div className="bg-gray-700 p-2 flex justify-around text-white">
       <div className="flex justify-center gap-20">
-        <Link href="/">Inicio</Link>
+        <Link href="/logistic/home">Inicio</Link>
         <Link href="/logistic/list">Lista</Link>
         <Link href="/logistic/add">Agregar</Link>
         <Link href="/logistic/admin">Admin</Link>

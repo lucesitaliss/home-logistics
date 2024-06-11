@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, SyntheticEvent } from "react";
+import { addCategory } from "@/app/actions/categories";
 
 export default function FormPrueba() {
   const [formData, setFormData] = useState<string>("");
@@ -13,7 +14,7 @@ export default function FormPrueba() {
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await fetch("/api/add-category", {
+      await fetch("/api/categories/add-category", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {

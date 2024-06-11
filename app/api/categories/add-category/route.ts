@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addCategory } from "@/app/actions";
+import { addCategory } from "@/app/actions/categories";
 
 export async function POST(req: Request) {
   try {

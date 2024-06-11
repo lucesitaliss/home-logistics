@@ -29,7 +29,8 @@
     "app/lib/googleSheet.js",
     "app/api/sheet/sheet.js",
     "app/formPrueba.jsx",
-    "app/api/sheet/sheet.js"
+    "app/api/sheet/sheet.js",
+    "app/actions/authenticate.js"
   ],
   "exclude": ["node_modules"]
 }
