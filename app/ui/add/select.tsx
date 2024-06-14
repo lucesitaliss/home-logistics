@@ -85,7 +85,7 @@ export default function Select() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 text-xs sm:text-sm">
       <select value={selectedCategory} onChange={handleSelectChange}>
         {selectedCategory ? null : (
           <option value=""> Seleccione una Categoria </option>

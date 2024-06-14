@@ -10,7 +10,7 @@ export default async function Menu() {
 
   return (
     <div className="bg-gray-700 p-2  justify-around text-white">
-      <div className="flex justify-center sm:justify-end gap-3 text-xs items-center">
+      <div className="flex justify-center sm:justify-end gap-3 text-xs sm:text-sm items-center">
         <form action={doGoogleLogout}>
           <button type="submit">Signin Out</button>
         </form>
@@ -25,7 +25,7 @@ export default async function Menu() {
           />
         )}
       </div>
-      <div className="flex  justify-center gap-5 sm:gap-10 text-xs ">
+      <div className="flex  justify-center gap-5 sm:gap-10 text-xs sm:text-sm">
         <Link href="/logistic/home">Inicio</Link>
         <Link href="/logistic/list">Lista</Link>
         <Link href="/logistic/add">Agregar</Link>
