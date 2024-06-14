@@ -53,7 +53,6 @@ export async function addCategory(nameCategory: string): Promise<void> {
       id: id,
       name: nameCategory,
     };
-
     await sheet.addRow(data);
   } else {
     throw new Error('Sheet named "categorias" not found');
@@ -61,13 +60,16 @@ export async function addCategory(nameCategory: string): Promise<void> {
 }
 
 export async function deleteCategory(idCategory: string): Promise<void> {
+  console.log("🚗🚗Encontro a la accion");
   await doc.loadInfo();
   const sheetCategory = doc.sheetsByTitle["categories"];
   if (sheetCategory) {
+    console.log("🚗🚗Mis categorias de sheet la categoria");
     const rows = await sheetCategory.getRows();
 
     const findRow = rows.find((row) => row.get("id") === idCategory);
     if (findRow) {
+      console.log("🚗🚗Encontro la categoria");
       await findRow.delete();
     }
   } else {
