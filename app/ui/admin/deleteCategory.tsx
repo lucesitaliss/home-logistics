@@ -6,7 +6,7 @@ export default async function DeleteCategory() {
       method: "DELETE",
       body: JSON.stringify("7"),
       headers: {
-        "content-Type": "applicate/json",
+        "content-Type": "application/json",
       },
     });
   };

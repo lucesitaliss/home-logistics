@@ -3,8 +3,6 @@ import { deleteCategory } from "@/app/actions/categories";
 
 export async function DELETE(req: Request) {
   try {
-    // const url = new URL(req.url);
-    // const idCategory = url.searchParams.get("id_category");
     const idCategory = await req.json();
     if (!idCategory) {
       return NextResponse.json(
