@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { deleteCategory } from "@/app/actions/categories";
+import { deleteCategoryById } from "@/app/actions/categories";
 
 export async function DELETE(req: Request) {
   try {
@@ -10,7 +10,7 @@ export async function DELETE(req: Request) {
         { status: 400 }
       );
     }
-    await deleteCategory(idCategory);
+    await deleteCategoryById(idCategory);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Error interno del servidor" });

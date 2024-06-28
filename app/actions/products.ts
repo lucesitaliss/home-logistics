@@ -49,3 +49,57 @@ export async function getProductsByCategory(
     throw new Error("El id de categoria no es valido");
   }
 }
+
+interface EditProductParams {
+  idProduct: string;
+  newNameProduct: string;
+}
+
+export async function editNameProduct(
+  product: EditProductParams
+): Promise<void> {
+  try {
+    const { idProduct, newNameProduct } = product;
+    await doc.loadInfo();
+    const sheetProducts = doc.sheetsByTitle["products"];
+    if (!sheetProducts) {
+      throw new Error('Sheet "Products" not found');
+    }
+    const rowsProducts = await sheetProducts.getRows();
+    const findProductRow = rowsProducts.find(
+      (row) => row.get("id") === idProduct
+    );
+    if (!findProductRow) {
+      throw new Error(`No row found with id:${idProduct}`);
+    }
+    findProductRow.set("name", newNameProduct);
+    await findProductRow.save();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function editCheckProduct(id_product: string): Promise<void> {
+  try {
+    await doc.loadInfo();
+    const sheetProducts = doc.sheetsByTitle["products"];
+    if (!sheetProducts) {
+      throw new Error('Sheet "Products" not found');
+    }
+    const rowsProducts = await sheetProducts.getRows();
+    const findProductRow = rowsProducts.find(
+      (row) => row.get("id") === id_product
+    );
+    if (!findProductRow) {
+      throw new Error(`No row found with id:${id_product}`);
+    }
+    const currendCheckedValue = findProductRow.get("checked") === "1";
+    findProductRow.set("checked", currendCheckedValue ? "0" : "1");
+    await findProductRow.save();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function deleteProductById() {}

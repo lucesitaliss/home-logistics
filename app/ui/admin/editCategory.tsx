@@ -4,7 +4,7 @@ import { useState } from "react";
 export default async function EditCategory() {
   const [category, setCategory] = useState({
     idCategory: "5",
-    newNameCategory: "jardin",
+    newNameCategory: "sin save",
   });
   const handleOnclick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();

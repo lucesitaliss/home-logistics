@@ -59,7 +59,7 @@ export async function addCategory(nameCategory: string): Promise<void> {
   }
 }
 
-export async function deleteCategory(idCategory: string): Promise<void> {
+export async function deleteCategoryById(idCategory: string): Promise<void> {
   await doc.loadInfo();
   const sheetCategory = doc.sheetsByTitle["categories"];
   if (sheetCategory) {
@@ -95,8 +95,6 @@ export async function editCategory(
       throw new Error(`No row found with id: ${idCategory}`);
     }
 
-    // findRow.set("name", newNameCategory);
-    // await findRow.save();
     findRow.set("name", newNameCategory);
     await findRow.save();
   } catch (error) {
