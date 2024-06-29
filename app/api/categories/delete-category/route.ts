@@ -6,13 +6,13 @@ export async function DELETE(req: Request) {
     const idCategory = await req.json();
     if (!idCategory) {
       return NextResponse.json(
-        { error: "El id de categoría es requerido" },
+        { error: "Category id is required" },
         { status: 400 }
       );
     }
     await deleteCategoryById(idCategory);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Error interno del servidor" });
+    return NextResponse.json({ error: error });
   }
 }
