@@ -80,9 +80,6 @@ export default function Select() {
       )
     );
   };
-  const handleButtonDelete = () => {
-    setProducts(products.filter((product) => !product.checked));
-  };
 
   return (
     <div className="p-4 text-xs sm:text-sm">

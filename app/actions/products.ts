@@ -1,6 +1,7 @@
 "use server";
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
 import jwt from "../lib/googleSheet";
+import { Shantell_Sans } from "next/font/google";
 
 const doc = new GoogleSpreadsheet(
   process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
@@ -80,7 +81,7 @@ export async function editNameProduct(
   }
 }
 
-export async function editCheckProduct(id_product: string): Promise<void> {
+export async function editCheckedProduct(idProduct: string): Promise<void> {
   try {
     await doc.loadInfo();
     const sheetProducts = doc.sheetsByTitle["products"];
@@ -89,10 +90,10 @@ export async function editCheckProduct(id_product: string): Promise<void> {
     }
     const rowsProducts = await sheetProducts.getRows();
     const findProductRow = rowsProducts.find(
-      (row) => row.get("id") === id_product
+      (row) => row.get("id") === idProduct
     );
     if (!findProductRow) {
-      throw new Error(`No row found with id:${id_product}`);
+      throw new Error(`No row found with id:${idProduct}`);
     }
     const currendCheckedValue = findProductRow.get("checked") === "1";
     findProductRow.set("checked", currendCheckedValue ? "0" : "1");
@@ -102,4 +103,18 @@ export async function editCheckProduct(id_product: string): Promise<void> {
   }
 }
 
-export async function deleteProductById() {}
+export async function deleteProductById(idProduct: string): Promise<void> {
+  await doc.loadInfo();
+
+  const sheetProducts = doc.sheetsByTitle["products"];
+
+  if (sheetProducts) {
+    const rows = await sheetProducts.getRows();
+    const findRow = rows.find((row) => row.get("id") === idProduct);
+    if (findRow) {
+      await findRow.delete();
+    }
+  } else {
+    throw new Error('Sheet named "categories" not found');
+  }
+}
