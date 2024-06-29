@@ -51,7 +51,7 @@ export async function getProductsByCategory(
   }
 }
 
-interface EditProductParams {
+export interface EditProductParams {
   idProduct: string;
   newNameProduct: string;
 }
