@@ -120,7 +120,7 @@ export default function Select() {
           Eliminar
         </button>
       </div> */}
-      <button onClick={handleButton}>delete</button>
+      <button onClick={handleButton}>prueba</button>
     </div>
   );
 }

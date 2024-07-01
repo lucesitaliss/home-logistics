@@ -118,3 +118,39 @@ export async function deleteProductById(idProduct: string): Promise<void> {
     throw new Error('Sheet named "categories" not found');
   }
 }
+export interface AddProduct {
+  name: string;
+  idCategory: string;
+}
+
+export async function addProduct(product: AddProduct): Promise<void> {
+  await doc.loadInfo();
+  const sheet = doc.sheetsByTitle["products"];
+  if (sheet) {
+    const rows = await sheet.getRows();
+    let maxId = 0;
+
+    rows.forEach((row: GoogleSpreadsheetRow) => {
+      const rawId = row.get("id") as string;
+      if (rawId) {
+        const currentId = parseInt(rawId, 10);
+        if (!isNaN(currentId) && currentId > maxId) {
+          maxId = currentId;
+        }
+      } else {
+        console.log("No ID found in row:", row);
+      }
+    });
+    const newId = maxId + 1;
+    const id = newId.toString();
+    const data = {
+      id,
+      name: product.name,
+      id_category: product.idCategory,
+      checked: "0",
+    };
+    await sheet.addRow(data);
+  } else {
+    throw new Error('Sheet named "categorias" not found');
+  }
+}
