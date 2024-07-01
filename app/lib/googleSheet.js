@@ -5,9 +5,15 @@ const SCOPES = [
   "https://www.googleapis.com/auth/spreadsheets",
   "https://www.googleapis.com/auth/drive.file",
 ];
+// const jwt = new google.JWT({
+//   email: creds.client_email,
+//   key: creds.private_key,
+//   scopes: SCOPES,
+// });
+
 const jwt = new google.JWT({
-  email: creds.client_email,
-  key: creds.private_key,
+  email: process.env.CLIENT_EMAIL,
+  key: process.env.PRIVATE_KEY,
   scopes: SCOPES,
 });
 
