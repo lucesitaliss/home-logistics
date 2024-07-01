@@ -80,6 +80,7 @@ export default function Select() {
       )
     );
   };
+  async function handleButton() {}
 
   return (
     <div className="p-4 text-xs sm:text-sm">
@@ -119,6 +120,7 @@ export default function Select() {
           Eliminar
         </button>
       </div> */}
+      <button onClick={handleButton}>delete</button>
     </div>
   );
 }
