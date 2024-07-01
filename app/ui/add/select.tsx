@@ -80,9 +80,7 @@ export default function Select() {
       )
     );
   };
-  const handleButtonDelete = () => {
-    setProducts(products.filter((product) => !product.checked));
-  };
+  async function handleButton() {}
 
   return (
     <div className="p-4 text-xs sm:text-sm">
@@ -122,6 +120,7 @@ export default function Select() {
           Eliminar
         </button>
       </div> */}
+      <button onClick={handleButton}>prueba</button>
     </div>
   );
 }

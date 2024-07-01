@@ -53,14 +53,13 @@ export async function addCategory(nameCategory: string): Promise<void> {
       id: id,
       name: nameCategory,
     };
-
     await sheet.addRow(data);
   } else {
     throw new Error('Sheet named "categorias" not found');
   }
 }
 
-export async function deleteCategory(idCategory: string): Promise<void> {
+export async function deleteCategoryById(idCategory: string): Promise<void> {
   await doc.loadInfo();
   const sheetCategory = doc.sheetsByTitle["categories"];
   if (sheetCategory) {
@@ -74,22 +73,32 @@ export async function deleteCategory(idCategory: string): Promise<void> {
     throw new Error('Sheet named "categories" not found');
   }
 }
+export interface EditCategoryParams {
+  idCategory: string;
+  newNameCategory: string;
+}
 
 export async function editCategory(
-  idCategory: string,
-  newNameCategory: string
+  category: EditCategoryParams
 ): Promise<void> {
-  await doc.loadInfo();
-  const sheetCategory = doc.sheetsByTitle["categories"];
-  if (sheetCategory) {
+  try {
+    const { idCategory, newNameCategory } = category;
+    await doc.loadInfo();
+    const sheetCategory = doc.sheetsByTitle["categories"];
+    if (!sheetCategory) {
+      throw new Error('Sheet "categories" not found');
+    }
     const rows = await sheetCategory.getRows();
     const findRow = rows.find((row) => row.get("id") === idCategory);
 
-    if (findRow) {
-      findRow.set("name", newNameCategory);
-      await findRow.save();
+    if (!findRow) {
+      throw new Error(`No row found with id: ${idCategory}`);
     }
-  } else {
-    throw new Error(`No row found with id: ${idCategory}`);
+
+    findRow.set("name", newNameCategory);
+    await findRow.save();
+  } catch (error) {
+    console.error("Error updating category:", error);
+    throw error;
   }
 }
