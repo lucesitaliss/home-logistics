@@ -14,7 +14,7 @@ const SCOPES = [
 
 const jwt = new google.JWT({
   email: process.env.CLIENT_EMAIL,
-  key: process.env.PRIVATE_KEY,
+  key: process.env.API_KEY,
   scopes: SCOPES,
 });
 
