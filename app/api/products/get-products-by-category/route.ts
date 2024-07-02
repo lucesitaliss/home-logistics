@@ -3,8 +3,7 @@ import { getProductsByCategory } from "@/app/actions/products";
 
 export async function GET(req: Request) {
   try {
-    const url = new URL(req.url);
-    const idCategory = url.searchParams.get("id_category");
+    const { idCategory } = await req.json();
     if (!idCategory) {
       return NextResponse.json(
         { error: "Category id is required" },

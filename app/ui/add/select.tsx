@@ -47,12 +47,13 @@ export default function Select() {
   async function fetcProducts() {
     if (selectedCategory) {
       const productsResponse = await fetch(
-        `/api/products/get-products-by-category?id_category=${selectedCategory}`,
+        `/api/products/get-products-by-category}`,
         {
           method: "GET",
           headers: {
             "Content-type": "application/json",
           },
+          body: JSON.stringify({ idCategory: selectedCategory }),
         }
       );
       if (!productsResponse.ok) {
