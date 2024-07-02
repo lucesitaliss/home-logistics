@@ -1,18 +1,25 @@
+import { NextResponse } from "next/server";
 import { appendToSheet } from "../../lib/sheet";
 
-export async function POST(req: Request, res: any) {
+export async function POST(req: Request) {
   try {
     const { name, email } = await req.json();
-    //  const { name, email } = req.body;
-    const data = await appendToSheet({
+
+    await appendToSheet({
       name,
       email,
     });
-    res.status(200).json({
-      message: "Success save data",
-    });
+    return NextResponse.json(
+      {
+        message: "Success save data",
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
