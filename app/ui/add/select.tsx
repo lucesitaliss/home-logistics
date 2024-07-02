@@ -47,7 +47,7 @@ export default function Select() {
   async function fetcProducts() {
     if (selectedCategory) {
       const productsResponse = await fetch(
-        `/api/products/get-products-by-category}`,
+        "/api/products/get-products-by-category",
         {
           method: "GET",
           headers: {
