@@ -53,7 +53,7 @@ export default function Select() {
           headers: {
             "Content-type": "application/json",
           },
-          body: JSON.stringify({ idCategory: selectedCategory }),
+          body: JSON.stringify({ id_category: selectedCategory }),
         }
       );
       if (!productsResponse.ok) {
