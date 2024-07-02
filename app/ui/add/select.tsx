@@ -49,7 +49,7 @@ export default function Select() {
       const productsResponse = await fetch(
         "/api/products/get-products-by-category",
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-type": "application/json",
           },

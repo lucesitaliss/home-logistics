@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProductsByCategory } from "@/app/actions/products";
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   try {
     const { id_category } = await req.json();
     if (!id_category) {
