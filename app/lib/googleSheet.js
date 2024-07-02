@@ -10,6 +10,7 @@ const SCOPES = [
 //   key: creds.private_key,
 //   scopes: SCOPES,
 // });
+//push domain
 
 const jwt = new google.JWT({
   email: process.env.CLIENT_EMAIL,
