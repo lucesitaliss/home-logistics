@@ -23,7 +23,7 @@ export default function Select() {
   }, []);
 
   useEffect(() => {
-    fetcProducts();
+    fetchProducts();
   }, [selectedCategory]);
 
   async function fetchCategories() {
@@ -43,8 +43,14 @@ export default function Select() {
       console.error("Error fetching categories:", error);
     }
   }
+  interface Product {
+    id: string;
+    name: string;
+    id_category: string;
+    checked: string | boolean;
+  }
 
-  async function fetcProducts() {
+  async function fetchProducts() {
     if (selectedCategory) {
       const productsResponse = await fetch(
         "/api/products/get-products-by-category",
@@ -59,8 +65,13 @@ export default function Select() {
       if (!productsResponse.ok) {
         throw new Error("Error fetching productos by categories");
       }
-      const productsData = await productsResponse.json();
-      setProducts(productsData);
+      const productsData: Product[] = await productsResponse.json();
+      const productsDataChecked = productsData.map((product: Product) => ({
+        ...product,
+        checked: product.checked === "1" ? true : false,
+      }));
+
+      setProducts(productsDataChecked);
     }
   }
 
