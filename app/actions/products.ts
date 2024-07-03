@@ -80,9 +80,15 @@ export async function editNameProduct(
     throw error;
   }
 }
-
-export async function editCheckedProduct(idProduct: string): Promise<void> {
+interface ProductChecked {
+  idProduct: string;
+  checked: boolean;
+}
+export async function editCheckedProduct(
+  productChecked: ProductChecked
+): Promise<void> {
   try {
+    const checked = productChecked.checked ? "1" : "0";
     await doc.loadInfo();
     const sheetProducts = doc.sheetsByTitle["products"];
     if (!sheetProducts) {
@@ -90,13 +96,14 @@ export async function editCheckedProduct(idProduct: string): Promise<void> {
     }
     const rowsProducts = await sheetProducts.getRows();
     const findProductRow = rowsProducts.find(
-      (row) => row.get("id") === idProduct
+      (row) => row.get("id") === productChecked.idProduct
     );
     if (!findProductRow) {
-      throw new Error(`No row found with id:${idProduct}`);
+      throw new Error(`No row found with id:${productChecked.idProduct}`);
     }
-    const currendCheckedValue = findProductRow.get("checked") === "1";
-    findProductRow.set("checked", currendCheckedValue ? "0" : "1");
+    // const currendCheckedValue = findProductRow.get("checked") === "1";
+    // findProductRow.set("checked", currendCheckedValue ? "0" : "1");
+    findProductRow.set("checked", checked);
     await findProductRow.save();
   } catch (error) {
     console.error(error);

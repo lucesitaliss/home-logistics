@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
+// import { editCheckedProduct } from "@/app/actions/products";
 
 interface Category {
   id: string;
@@ -47,7 +48,7 @@ export default function Select() {
     id: string;
     name: string;
     id_category: string;
-    checked: string | boolean;
+    checked: any;
   }
 
   async function fetchProducts() {
@@ -65,7 +66,7 @@ export default function Select() {
       if (!productsResponse.ok) {
         throw new Error("Error fetching productos by categories");
       }
-      const productsData: Product[] = await productsResponse.json();
+      const productsData = await productsResponse.json();
       const productsDataChecked = productsData.map((product: Product) => ({
         ...product,
         checked: product.checked === "1" ? true : false,
@@ -80,7 +81,9 @@ export default function Select() {
     setSelectedCategoy(target.value);
   };
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckboxChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const productId = event.target.id;
     const isChecked = event.target.checked;
 
@@ -91,6 +94,19 @@ export default function Select() {
           : product
       )
     );
+
+    const productChecked = {
+      idProduct: productId,
+      checked: event.target.checked,
+    };
+    // editCheckedProduct(productChecked);
+    const productsResponse = await fetch("/api/products/edit-checked-product", {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(productChecked),
+    });
   };
   async function handleButton() {}
 
