@@ -101,12 +101,52 @@ export async function editCheckedProduct(
     if (!findProductRow) {
       throw new Error(`No row found with id:${productChecked.idProduct}`);
     }
-    // const currendCheckedValue = findProductRow.get("checked") === "1";
-    // findProductRow.set("checked", currendCheckedValue ? "0" : "1");
+
     findProductRow.set("checked", checked);
     await findProductRow.save();
   } catch (error) {
     console.error(error);
+  }
+}
+
+interface Products {
+  id: string;
+  name: string;
+  id_category: string;
+  checked: boolean;
+}
+
+export async function editCheckedProducts(
+  productsChecked: Products[]
+): Promise<void> {
+  try {
+    // Crear diccionario con productos chequeados y convertirlo a formato string con 0 y 1
+    const checkedDict = productsChecked.reduce(
+      (acc: { [key: string]: string }, product) => {
+        acc[product.id] = product.checked ? "1" : "0";
+        return acc;
+      },
+      {}
+    ); //ejemplo {"1":"1","2":"1","3":"0"}
+
+    await doc.loadInfo();
+
+    const sheetProducts = doc.sheetsByTitle["products"];
+    if (!sheetProducts) {
+      throw new Error('Sheet "Products" not found');
+    }
+
+    const rowsProducts = await sheetProducts.getRows();
+
+    for (const rowProduct of rowsProducts) {
+      const rowId = rowProduct.get("id");
+      if (checkedDict.hasOwnProperty(rowId)) {
+        rowProduct.set("checked", checkedDict[rowId]);
+        await rowProduct.save();
+      }
+    }
+  } catch (error) {
+    console.error("Error updating products:", error);
   }
 }
 

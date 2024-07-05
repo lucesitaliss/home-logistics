@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
+import { editCheckedProducts } from "@/app/actions/products";
 
 interface Category {
   id: string;
@@ -23,7 +24,6 @@ export default function Select() {
 
   useEffect(() => {
     fetchCategories();
-    console.log(products);
   }, []);
 
   useEffect(() => {
@@ -87,9 +87,11 @@ export default function Select() {
     setSelectedCategoy(target.value);
   };
 
-  const handleAllChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAllChecked = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const checked = event.target.checked;
-    console.log(checked);
+
     const allcheckedProducts = products.map((product) => ({
       ...product,
       checked: checked,
@@ -97,6 +99,7 @@ export default function Select() {
 
     setProducts(allcheckedProducts);
     setAllChecked(checked);
+    await editCheckedProducts(allcheckedProducts);
   };
 
   const handleCheckboxChange = async (
