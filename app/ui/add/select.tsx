@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
-// import { editCheckedProduct } from "@/app/actions/products";
+import { ClipLoader } from "react-spinners";
 
 interface Category {
   id: string;
@@ -15,16 +15,20 @@ interface Product {
 }
 
 export default function Select() {
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategoy] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [allChecked, setAllChecked] = useState(false);
 
   useEffect(() => {
     fetchCategories();
+    console.log(products);
   }, []);
 
   useEffect(() => {
     fetchProducts();
+    setIsLoading(true);
   }, [selectedCategory]);
 
   async function fetchCategories() {
@@ -40,6 +44,7 @@ export default function Select() {
       }
       const categoriesData = await categoriesRespone.json();
       setCategories(categoriesData);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -73,12 +78,25 @@ export default function Select() {
       }));
 
       setProducts(productsDataChecked);
+      setIsLoading(false);
     }
   }
 
   const handleSelectChange = (event: SyntheticEvent) => {
     const target = event.target as HTMLSelectElement;
     setSelectedCategoy(target.value);
+  };
+
+  const handleAllChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+    console.log(checked);
+    const allcheckedProducts = products.map((product) => ({
+      ...product,
+      checked: checked,
+    }));
+
+    setProducts(allcheckedProducts);
+    setAllChecked(checked);
   };
 
   const handleCheckboxChange = async (
@@ -99,7 +117,7 @@ export default function Select() {
       idProduct: productId,
       checked: event.target.checked,
     };
-    // editCheckedProduct(productChecked);
+
     const productsResponse = await fetch("/api/products/edit-checked-product", {
       method: "PUT",
       headers: {
@@ -107,11 +125,37 @@ export default function Select() {
       },
       body: JSON.stringify(productChecked),
     });
+    if (!productsResponse.ok) {
+      throw new Error("Error when changing the checked of the product");
+    }
   };
-  async function handleButton() {}
 
   return (
     <div className="p-4 text-xs sm:text-sm">
+      {/* <div className="flex gap-6">
+        <button className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-20">
+          Editar
+        </button>
+        <button className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-20">
+          Eliminar
+        </button>
+      </div> */}
+      {products.length > 0 ? (
+        <div className="mb-2">
+          <label>
+            <input
+              className="mr-1"
+              type="checkbox"
+              checked={allChecked}
+              onChange={handleAllChecked}
+            />
+            Todo
+          </label>
+        </div>
+      ) : (
+        ""
+      )}
+
       <select value={selectedCategory} onChange={handleSelectChange}>
         {selectedCategory ? null : (
           <option value=""> Seleccione una Categoria </option>
@@ -122,11 +166,13 @@ export default function Select() {
           </option>
         ))}
       </select>
+
       <div className="pt-4">
         {products.map((product) => (
           <div key={product.id}>
             <label key={product.id}>
               <input
+                className="mr-1"
                 id={product.id}
                 type="checkbox"
                 onChange={handleCheckboxChange}
@@ -137,18 +183,14 @@ export default function Select() {
           </div>
         ))}
       </div>
-      {/* <div className="flex gap-6">
-        <button className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-20">
-          Editar
-        </button>
-        <button
-          className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-20"
-          onClick={handleButtonDelete}
-        >
-          Eliminar
-        </button>
-      </div> */}
-      <button onClick={handleButton}>prueba</button>
+
+      {isLoading ? (
+        <div className="flex justify-center items-center h-screen">
+          <ClipLoader size={50} color={"#123abc"} loading={isLoading} />{" "}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }
