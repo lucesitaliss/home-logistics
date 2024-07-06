@@ -99,7 +99,7 @@ export default function Select() {
 
     setProducts(allcheckedProducts);
     setAllChecked(checked);
-    // await editCheckedProducts(allcheckedProducts);
+
     const productsResponse = await fetch(
       "/api/products/edit-checked-products",
       {
@@ -156,36 +156,38 @@ export default function Select() {
           Eliminar
         </button>
       </div> */}
-      {products.length > 0 ? (
-        <div className="mb-2">
-          <label>
-            <input
-              className="mr-1"
-              type="checkbox"
-              checked={allChecked}
-              onChange={handleAllChecked}
-            />
-            Todo
-          </label>
-        </div>
-      ) : (
-        ""
-      )}
+      <div className=" flex gap-2  items-start">
+        <select
+          value={selectedCategory}
+          onChange={handleSelectChange}
+          className="border border-gray-100 rounded"
+        >
+          {selectedCategory ? null : (
+            <option value=""> Seleccione una Categoria </option>
+          )}
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
 
-      <select
-        value={selectedCategory}
-        onChange={handleSelectChange}
-        className="border border-gray-100 rounded"
-      >
-        {selectedCategory ? null : (
-          <option value=""> Seleccione una Categoria </option>
+        {products.length > 0 ? (
+          <div className="mb-2">
+            <label>
+              <input
+                className="mr-1"
+                type="checkbox"
+                checked={allChecked}
+                onChange={handleAllChecked}
+              />
+              Todo
+            </label>
+          </div>
+        ) : (
+          ""
         )}
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
+      </div>
 
       <div className="pt-4">
         {products.map((product) => (
