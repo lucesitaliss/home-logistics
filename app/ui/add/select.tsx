@@ -99,7 +99,20 @@ export default function Select() {
 
     setProducts(allcheckedProducts);
     setAllChecked(checked);
-    await editCheckedProducts(allcheckedProducts);
+    // await editCheckedProducts(allcheckedProducts);
+    const productsResponse = await fetch(
+      "/api/products/edit-checked-products",
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(allcheckedProducts),
+      }
+    );
+    if (!productsResponse.ok) {
+      throw new Error("Error when changing the checked of the product");
+    }
   };
 
   const handleCheckboxChange = async (
@@ -159,7 +172,11 @@ export default function Select() {
         ""
       )}
 
-      <select value={selectedCategory} onChange={handleSelectChange}>
+      <select
+        value={selectedCategory}
+        onChange={handleSelectChange}
+        className="border border-gray-100 rounded"
+      >
         {selectedCategory ? null : (
           <option value=""> Seleccione una Categoria </option>
         )}

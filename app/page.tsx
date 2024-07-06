@@ -1,5 +1,5 @@
 import Authenticate from "./ui/authenticate";
-
+import "./globals.css";
 export default function Home() {
   return (
     <main>
