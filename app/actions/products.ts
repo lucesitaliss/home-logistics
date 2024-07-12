@@ -1,7 +1,6 @@
 "use server";
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
-import jwt from "../lib/googleSheet";
-import { Shantell_Sans } from "next/font/google";
+import jwt from "../lib/googleApiAuth";
 
 const doc = new GoogleSpreadsheet(
   process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,

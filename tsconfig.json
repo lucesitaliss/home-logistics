@@ -26,7 +26,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/lib/googleSheet.js",
+    "app/lib/googleApiAuth.js",
     "app/api/sheet/sheet.js",
     "app/formPrueba.jsx",
     "app/api/sheet/sheet.js",

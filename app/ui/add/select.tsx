@@ -2,6 +2,7 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
 import { editCheckedProducts } from "@/app/actions/products";
+import { getOrCreateSpreadsheet } from "../../actions/googleDrive";
 
 interface Category {
   id: string;
@@ -146,6 +147,8 @@ export default function Select() {
     }
   };
 
+  const prueba = async () => {};
+
   return (
     <div className="p-4 text-xs sm:text-sm">
       {/* <div className="flex gap-6">
@@ -213,6 +216,7 @@ export default function Select() {
       ) : (
         ""
       )}
+      <button onClick={prueba}>prueba</button>
     </div>
   );
 }
