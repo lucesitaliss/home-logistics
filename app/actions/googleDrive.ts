@@ -55,7 +55,7 @@
 // };
 import { auth } from "../../auth";
 
-export const getOrCreateSpreadsheet = async () => {
+export const checkFolderExists = async (folderName: string) => {
   const session = await auth();
   if (!session) {
     throw new Error("No se pudo autenticar el usuario.");
@@ -65,15 +65,51 @@ export const getOrCreateSpreadsheet = async () => {
     throw new Error("No se pudo obtener el accessToken.");
   }
 
-  const response = await fetch("https://www.googleapis.com/drive/v3/files", {
+  // const response = await fetch(`https://www.googleapis.com/drive/v3/files`, {
+  const query = encodeURIComponent(
+    `name='${folderName}' and mimeType='application/vnd.google-apps.folder'`
+  );
+  const url = `https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name)`;
+
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
     },
   });
-  if (response.ok) {
-    const data = await response.json();
-    return data;
-  } else {
+  if (!response.ok) {
+    throw new Error("Error al buscar la carpeta");
   }
+
+  const data = await response.json();
+  return data.files.length > 0 ? data.files[0] : null;
 };
+
+export async function createFolder(folderName: string) {
+  const session = await auth();
+  if (!session) {
+    throw new Error("No se pudo autenticar el usuario.");
+  }
+  const accessToken = session.accessToken;
+  if (!accessToken) {
+    throw new Error("No se pudo obtener el accessToken.");
+  }
+  const response = await fetch("https://www.googleapis.com/drive/v3/files", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: folderName,
+      mimeType: "application/vnd.google-apps.folder",
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al crear la carpeta");
+  }
+
+  const data = await response.json();
+  return data;
+}

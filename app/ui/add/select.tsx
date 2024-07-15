@@ -2,7 +2,8 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
 import { editCheckedProducts } from "@/app/actions/products";
-import { getOrCreateSpreadsheet } from "../../actions/googleDrive";
+import { checkFolderExists } from "../../actions/googleDrive";
+import { createFolder } from "../../actions/googleDrive";
 
 interface Category {
   id: string;
@@ -147,7 +148,11 @@ export default function Select() {
     }
   };
 
-  const prueba = async () => {};
+  const prueba = async () => {
+    const data = await checkFolderExists("prueba");
+    await createFolder("prueba");
+    console.log("La data ***********", data);
+  };
 
   return (
     <div className="p-4 text-xs sm:text-sm">
