@@ -4,6 +4,8 @@ import { ClipLoader } from "react-spinners";
 import { editCheckedProducts } from "@/app/actions/products";
 import { checkFolderExists } from "../../actions/googleDrive";
 import { createFolder } from "../../actions/googleDrive";
+import { shareFolder } from "../../actions/googleDrive";
+import { listFilesInSharedFolder } from "../../actions/googleDrive";
 
 interface Category {
   id: string;
@@ -150,8 +152,15 @@ export default function Select() {
 
   const prueba = async () => {
     const data = await checkFolderExists("prueba");
-    await createFolder("prueba");
-    console.log("La data ***********", data);
+    console.log(data);
+    // if (!data) {
+    //   await createFolder("prueba");
+    //   console.log("se creo y compartio exitosamente la carpeta");
+    // }
+    // const data = await listFilesInSharedFolder(
+    //   "1_JGzGGifzl9UICG_GFrHFoYk7IuOpK24"
+    // );
+    // console.log(data);
   };
 
   return (
