@@ -26,10 +26,10 @@ export default async function Menu() {
         )}
       </div>
       <div className="flex  justify-center gap-5 sm:gap-10 text-xs sm:text-sm">
-        <Link href="/logistic/home">Inicio</Link>
         <Link href="/logistic/list">Lista</Link>
         <Link href="/logistic/add">Agregar</Link>
         <Link href="/logistic/admin">Admin</Link>
+        <Link href="/logistic/data">Datos</Link>
       </div>
     </div>
   );

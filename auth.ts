@@ -15,7 +15,7 @@ export const {
           access_type: "offline",
           response_type: "code",
           scope:
-            "openid email profile https://www.googleapis.com/auth/drive.file",
+            "openid email profile https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/gmail.send",
         },
       },
     }),

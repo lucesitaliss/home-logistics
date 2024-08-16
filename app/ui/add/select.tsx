@@ -6,6 +6,7 @@ import { checkFolderExists } from "../../actions/googleDrive";
 import { createFolder } from "../../actions/googleDrive";
 import { shareFolder } from "../../actions/googleDrive";
 import { listFilesInSharedFolder } from "../../actions/googleDrive";
+import { sendEmail } from "../../actions/googleDrive";
 
 interface Category {
   id: string;
@@ -151,28 +152,21 @@ export default function Select() {
   };
 
   const prueba = async () => {
-    const data = await checkFolderExists("prueba");
-    console.log(data);
+    // const data = await checkFolderExists("LaPrueba");
+    // console.log("existe carpeta LaPrueba", data);
     // if (!data) {
-    //   await createFolder("prueba");
+    //   await createFolder("LaPrueba");
     //   console.log("se creo y compartio exitosamente la carpeta");
     // }
-    // const data = await listFilesInSharedFolder(
-    //   "1_JGzGGifzl9UICG_GFrHFoYk7IuOpK24"
-    // );
-    // console.log(data);
+    await sendEmail(
+      "lucesitaliss@gmail.com",
+      "Solicitud de compartir archivos",
+      "Hola, por favor comparte tus archivos conmigo a través de la aplicación."
+    );
   };
 
   return (
     <div className="p-4 text-xs sm:text-sm">
-      {/* <div className="flex gap-6">
-        <button className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-20">
-          Editar
-        </button>
-        <button className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-20">
-          Eliminar
-        </button>
-      </div> */}
       <div className=" flex gap-2  items-start">
         <select
           value={selectedCategory}
