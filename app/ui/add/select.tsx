@@ -1,11 +1,6 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
-import { editCheckedProducts } from "@/app/actions/products";
-import { checkFolderExists } from "../../actions/googleDrive";
-import { createFolder } from "../../actions/googleDrive";
-import { shareFolder } from "../../actions/googleDrive";
-import { listFilesInSharedFolder } from "../../actions/googleDrive";
 import { sendEmail } from "../../actions/googleDrive";
 
 interface Category {
