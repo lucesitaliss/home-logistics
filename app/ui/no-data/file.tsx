@@ -4,6 +4,7 @@ import { sendEmail } from "@/app/actions/googleDrive";
 import Link from "next/link";
 import { ClipLoader } from "react-spinners";
 import { useState } from "react";
+import RequestFileModal from "./requestFileModal";
 
 function isString(value: any): value is string {
   return typeof value === "string";
@@ -11,6 +12,7 @@ function isString(value: any): value is string {
 
 export default function File() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const createFile = async () => {
     setIsLoading(true);
@@ -26,12 +28,15 @@ export default function File() {
     isString(create) ? alert("la carpeta ya existe") : "";
   };
 
-  const requestFile = async () => {
-    await sendEmail(
-      "lucesitaliss@gmail.com",
-      "Solicitud de carpeta ",
-      "Hola, por favor me puedes compartir la carpeta homeLogistic."
-    );
+  // const requestFile = async () => {
+  //   await sendEmail(
+  //     "lucesitaliss@gmail.com",
+  //     "Solicitud de carpeta ",
+  //     "Hola, por favor me puedes compartir la carpeta homeLogistic."
+  //   );
+  // };
+  const handleOpenModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
   return (
     <div className="flex flex-col gap-6 pl-3 justify-center items-center h-[30vh]">
@@ -43,7 +48,7 @@ export default function File() {
       </button>
       <button
         className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-36"
-        onClick={requestFile}
+        onClick={handleOpenModal}
       >
         Solicitar Archivo
       </button>
@@ -52,6 +57,7 @@ export default function File() {
       <div className="flex  ">
         <ClipLoader size={50} color={"#123abc"} loading={isLoading} />{" "}
       </div>
+      {isModalOpen ? <RequestFileModal /> : ""}
     </div>
   );
 }
