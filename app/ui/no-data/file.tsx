@@ -36,28 +36,36 @@ export default function File() {
   //   );
   // };
   const handleOpenModal = () => {
-    setIsModalOpen(!isModalOpen);
+    setIsModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsModalOpen(false);
   };
   return (
     <div className="flex flex-col gap-6 pl-3 justify-center items-center h-[30vh]">
       <button
-        className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-36"
+        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-40"
         onClick={createFile}
       >
         Crear Archivo
       </button>
       <button
-        className="p-0.5 border-gray-700 border-2 rounded-md bg-slate-200 w-36"
+        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-40"
         onClick={handleOpenModal}
       >
         Solicitar Archivo
       </button>
-      <Link href="/logistic">Volver</Link>
+      <Link href="/logistic" className="hover:font-bold">
+        Volver
+      </Link>
 
       <div className="flex  ">
         <ClipLoader size={50} color={"#123abc"} loading={isLoading} />{" "}
       </div>
-      {isModalOpen ? <RequestFileModal /> : ""}
+      {isModalOpen && (
+        <RequestFileModal isOpen={isModalOpen} onClose={handleClose} />
+      )}
     </div>
   );
 }
