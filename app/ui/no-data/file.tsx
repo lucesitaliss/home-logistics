@@ -1,10 +1,11 @@
 "use client";
 import { createFolderAndSheet } from "@/app/actions/googleDrive";
 import { sendEmail } from "@/app/actions/googleDrive";
-import Link from "next/link";
 import { ClipLoader } from "react-spinners";
 import { useState } from "react";
 import RequestFileModal from "./requestFileModal";
+import { doGoogleLogout } from "@/app/actions/authenticate";
+import Link from "next/link";
 
 function isString(value: any): value is string {
   return typeof value === "string";
@@ -56,9 +57,6 @@ export default function File() {
       >
         Solicitar Archivo
       </button>
-      <Link href="/logistic" className="hover:font-bold">
-        Volver
-      </Link>
 
       <div className="flex  ">
         <ClipLoader size={50} color={"#123abc"} loading={isLoading} />{" "}
@@ -66,6 +64,7 @@ export default function File() {
       {isModalOpen && (
         <RequestFileModal isOpen={isModalOpen} onClose={handleClose} />
       )}
+      <Link href="/">Salir</Link>
     </div>
   );
 }

@@ -15,7 +15,7 @@ const RequestFileModal: React.FC<RequestFileModalProps> = ({
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("Solicitud de carpeta");
   const [message, setMessage] = useState(
-    "Hola, por favor me puedes compartir la carpeta homeLogistic."
+    "Hola, por favor me puedes compartir el archivo de datos de Home Logistic."
   );
 
   if (!isOpen) return null;
