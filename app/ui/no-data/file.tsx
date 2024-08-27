@@ -1,10 +1,8 @@
 "use client";
 import { createFolderAndSheet } from "@/app/actions/googleDrive";
-import { sendEmail } from "@/app/actions/googleDrive";
 import { ClipLoader } from "react-spinners";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import RequestFileModal from "./requestFileModal";
-import { doGoogleLogout } from "@/app/actions/authenticate";
 import Link from "next/link";
 
 function isString(value: any): value is string {
@@ -15,27 +13,35 @@ export default function File() {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
   const createFile = async () => {
     setIsLoading(true);
-    const create = await createFolderAndSheet(
-      "homeLogistic",
-      "homeLogisticSheet"
-    );
 
-    if (!createFile) {
-      throw new Error("Error al configurar las hojas de cálculo");
+    try {
+      const create = await createFolderAndSheet(
+        "homeLogistic",
+        "homeLogisticSheet"
+      );
+
+      if (!create) {
+        throw new Error("Error al configurar las hojas de cálculo");
+      }
+
+      if (typeof create === "string") {
+        setIsLoading(false);
+        alert("La carpeta ya existe");
+      } else {
+        // Lógica si se creó la carpeta y el archivo correctamente
+        setIsLoading(false);
+        linkRef.current?.click();
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
     }
-    create ? setIsLoading(false) : setIsLoading(true);
-    isString(create) ? alert("la carpeta ya existe") : "";
   };
 
-  // const requestFile = async () => {
-  //   await sendEmail(
-  //     "lucesitaliss@gmail.com",
-  //     "Solicitud de carpeta ",
-  //     "Hola, por favor me puedes compartir la carpeta homeLogistic."
-  //   );
-  // };
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -65,6 +71,7 @@ export default function File() {
         <RequestFileModal isOpen={isModalOpen} onClose={handleClose} />
       )}
       <Link href="/">Salir</Link>
+      <Link href="/logistic" ref={linkRef} style={{ display: "none" }} />
     </div>
   );
 }

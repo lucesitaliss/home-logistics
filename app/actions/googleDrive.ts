@@ -4,12 +4,13 @@ import { googleSessionAuth } from "../lib/googleSessionAuth";
 
 export const checkFolderExists = async (folderName: string) => {
   const { accessToken } = await googleSessionAuth();
+
   if (!accessToken) {
     throw new Error("There are problems with user authentication");
   }
 
   const query = encodeURIComponent(
-    `name='${folderName}' and mimeType='application/vnd.google-apps.folder'`
+    `name='${folderName}' and mimeType='application/vnd.google-apps.folder'and trashed=false`
   );
 
   const url = `https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name)&includeItemsFromAllDrives=true&supportsAllDrives=true`;
@@ -34,6 +35,41 @@ export const checkFolderExists = async (folderName: string) => {
   return data.files.length > 0 ? data.files[0] : null;
 };
 
+export async function getFolderId(folderName: string): Promise<string | null> {
+  const { session } = await googleSessionAuth();
+  if (!session) {
+    throw new Error("No se pudo autenticar el usuario.");
+  }
+
+  const accessToken = session.accessToken;
+  if (!accessToken) {
+    throw new Error("No se pudo obtener el accessToken.");
+  }
+
+  const searchFolderURL = `https://www.googleapis.com/drive/v3/files?q=name='${encodeURIComponent(
+    folderName
+  )}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+
+  const searchResponse = await fetch(searchFolderURL, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!searchResponse.ok) {
+    throw new Error("Error al buscar la carpeta");
+  }
+
+  const data = await searchResponse.json();
+
+  if (data.files && data.files.length > 0) {
+    return data.files[0].id; // Devuelve el ID de la primera carpeta encontrada con el nombre especificado
+  } else {
+    return null; // Si no se encuentra ninguna carpeta con ese nombre
+  }
+}
 export async function shareFolder(
   folderName: string,
   folderId: string,
@@ -65,6 +101,7 @@ export async function shareFolder(
   if (!shareResponse.ok) {
     throw new Error("Error al compartir la carpeta");
   }
+  return "shared";
 }
 
 export async function listFilesInSharedFolder(folderId: string) {
@@ -353,4 +390,33 @@ export async function createFolderAndSheet(
     return { folderId, sheetId };
   }
   return "La carpeta ya existe";
+}
+
+export async function listFilesInFolder() {
+  const { accessToken } = await googleSessionAuth();
+
+  if (!accessToken) {
+    throw new Error("No se pudo autenticar al usuario.");
+  }
+
+  const folderId = "1K5gspqfoJAxR_ZXqD89J4HqXAwWRwmOe"; // ID de la carpeta
+  const folderUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}' in parents&fields=files(id,name,mimeType)&includeItemsFromAllDrives=true&supportsAllDrives=true`;
+
+  const response = await fetch(folderUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `Error al acceder a los archivos de la carpeta: ${response.status} ${response.statusText} - ${errorText}`
+    );
+  }
+
+  const data = await response.json();
+  return data.files; // Devuelve la lista de archivos en la carpeta
 }
