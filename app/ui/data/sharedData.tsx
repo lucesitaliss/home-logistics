@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import SharedDataModal from "./sharedDataModal";
+import { getCategories } from "@/app/actions/categories";
 
 export default function SharedData() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,7 +13,10 @@ export default function SharedData() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
+  const prueba = async () => {
+    const categories = await getCategories();
+    console.log(categories);
+  };
   return (
     <div className="flex flex-col gap-6 pl-3 justify-center items-center h-[30vh]">
       <button
@@ -25,6 +29,7 @@ export default function SharedData() {
       {isModalOpen && (
         <SharedDataModal isOpen={isModalOpen} onClose={handleCloseModal} />
       )}
+      <button onClick={prueba}>prueba</button>
     </div>
   );
 }
