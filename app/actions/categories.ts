@@ -1,47 +1,14 @@
 "use server";
 
-import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
-import { googleSessionAuth } from "../lib/googleSessionAuth";
-import { getSheetFileId } from "../lib/googleDatabase";
-import { OAuth2Client } from "google-auth-library";
-
-// import jwt from "../lib/googleApiAuth";
-
-// const doc = new GoogleSpreadsheet(
-//   process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
-//   jwt
-// );
-
+import { GoogleSpreadsheetRow } from "google-spreadsheet";
+import { sheetDoc } from "../lib/googleFileSheetConection";
 interface Category {
   id: string;
   name: string;
 }
-// Función para obtener el cliente OAuth2
-const getOAuth2Client = (accessToken: string): OAuth2Client => {
-  const oauth2Client = new OAuth2Client();
-  oauth2Client.setCredentials({ access_token: accessToken });
-  return oauth2Client;
-};
 
 export async function getCategories(): Promise<Category[]> {
-  const { session } = await googleSessionAuth();
-  if (!session || !session.accessToken) {
-    throw new Error(
-      "No se pudo autenticar el usuario o no se obtuvo el accessToken."
-    );
-  }
-
-  const accessToken = session.accessToken;
-  const sheetFileId = await getSheetFileId();
-  if (!sheetFileId) {
-    throw new Error("No se pudo obtener el ID de la hoja de cálculo.");
-  }
-
-  // Obtener el cliente OAuth2
-  const authClient = getOAuth2Client(accessToken);
-  // Crear una instancia de GoogleSpreadsheet
-  const doc = new GoogleSpreadsheet(sheetFileId, authClient);
-
+  const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetCategories = doc.sheetsByTitle["categories"];
 
