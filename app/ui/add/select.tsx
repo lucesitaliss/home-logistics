@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
-import { sendEmail } from "../../actions/googleDrive";
-
+import { getCategoriesId } from "../../lib/googleDatabase";
+import { getSheetFileId } from "../../lib/googleDatabase";
+import { getproductsId } from "../../lib/googleDatabase";
 interface Category {
   id: string;
   name: string;
@@ -147,17 +148,10 @@ export default function Select() {
   };
 
   const prueba = async () => {
-    // const data = await checkFolderExists("LaPrueba");
-    // console.log("existe carpeta LaPrueba", data);
-    // if (!data) {
-    //   await createFolder("LaPrueba");
-    //   console.log("se creo y compartio exitosamente la carpeta");
-    // }
-    await sendEmail(
-      "lucesitaliss@gmail.com",
-      "Solicitud de compartir archivos",
-      "Hola, por favor comparte tus archivos conmigo a través de la aplicación."
-    );
+    const cateriesId = await getCategoriesId();
+    const fileId = await getSheetFileId();
+    const productsId = await getproductsId();
+    console.log(fileId, "****", cateriesId, "*****,", productsId);
   };
 
   return (

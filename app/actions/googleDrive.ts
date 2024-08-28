@@ -70,6 +70,40 @@ export async function getFolderId(folderName: string): Promise<string | null> {
     return null; // Si no se encuentra ninguna carpeta con ese nombre
   }
 }
+export async function getFileInFolder(folderId: string, fileName: string) {
+  const { accessToken } = await googleSessionAuth();
+
+  if (!accessToken) {
+    throw new Error("No se pudo obtener el token de acceso.");
+  }
+
+  // Query para buscar el archivo en la carpeta específica
+  const query = encodeURIComponent(
+    `name='${fileName}' and '${folderId}' in parents and trashed=false`
+  );
+
+  const url = `https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name)`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `Error al buscar el archivo: ${response.status} ${response.statusText} - ${errorText}`
+    );
+  }
+
+  const data = await response.json();
+
+  // Verificar si se encontró el archivo y devolver su información
+  return data.files.length > 0 ? data.files[0] : null;
+}
+
 export async function shareFolder(
   folderName: string,
   folderId: string,
@@ -366,7 +400,7 @@ export async function createFolderAndSheet(
       throw new Error("Error al configurar las hojas de cálculo");
     }
 
-    // Intentar eliminar la primera hoja (predeterminada)
+    // Delete page1
     const deleteSheetResponse = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}:batchUpdate`,
       {
@@ -390,33 +424,4 @@ export async function createFolderAndSheet(
     return { folderId, sheetId };
   }
   return "La carpeta ya existe";
-}
-
-export async function listFilesInFolder() {
-  const { accessToken } = await googleSessionAuth();
-
-  if (!accessToken) {
-    throw new Error("No se pudo autenticar al usuario.");
-  }
-
-  const folderId = "1K5gspqfoJAxR_ZXqD89J4HqXAwWRwmOe"; // ID de la carpeta
-  const folderUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}' in parents&fields=files(id,name,mimeType)&includeItemsFromAllDrives=true&supportsAllDrives=true`;
-
-  const response = await fetch(folderUrl, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Error al acceder a los archivos de la carpeta: ${response.status} ${response.statusText} - ${errorText}`
-    );
-  }
-
-  const data = await response.json();
-  return data.files; // Devuelve la lista de archivos en la carpeta
 }
