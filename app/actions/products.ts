@@ -56,6 +56,7 @@ export async function editNameProduct(
 ): Promise<void> {
   try {
     const { idProduct, newNameProduct } = product;
+    const doc = await sheetDoc();
     await doc.loadInfo();
     const sheetProducts = doc.sheetsByTitle["products"];
     if (!sheetProducts) {
@@ -84,6 +85,7 @@ export async function editCheckedProduct(
 ): Promise<void> {
   try {
     const checked = productChecked.checked ? "1" : "0";
+    const doc = await sheetDoc();
     await doc.loadInfo();
     const sheetProducts = doc.sheetsByTitle["products"];
     if (!sheetProducts) {
@@ -123,7 +125,7 @@ export async function editCheckedProducts(
       },
       {}
     ); //ejemplo {"1":"1","2":"1","3":"0"}
-
+    const doc = await sheetDoc();
     await doc.loadInfo();
 
     const sheetProducts = doc.sheetsByTitle["products"];
@@ -146,6 +148,7 @@ export async function editCheckedProducts(
 }
 
 export async function deleteProductById(idProduct: string): Promise<void> {
+  const doc = await sheetDoc();
   await doc.loadInfo();
 
   const sheetProducts = doc.sheetsByTitle["products"];
@@ -166,6 +169,7 @@ export interface AddProduct {
 }
 
 export async function addProduct(product: AddProduct): Promise<void> {
+  const doc = await sheetDoc();
   await doc.loadInfo();
   const sheet = doc.sheetsByTitle["products"];
   if (sheet) {

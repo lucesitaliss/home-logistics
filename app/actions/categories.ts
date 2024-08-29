@@ -25,6 +25,7 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function addCategory(nameCategory: string): Promise<void> {
+  const doc = await sheetDoc();
   await doc.loadInfo();
   const sheet = doc.sheetsByTitle["categories"];
   if (sheet) {
@@ -55,6 +56,7 @@ export async function addCategory(nameCategory: string): Promise<void> {
 }
 
 export async function deleteCategoryById(idCategory: string): Promise<void> {
+  const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetCategory = doc.sheetsByTitle["categories"];
   if (sheetCategory) {
@@ -78,6 +80,7 @@ export async function editCategory(
 ): Promise<void> {
   try {
     const { idCategory, newNameCategory } = category;
+    const doc = await sheetDoc();
     await doc.loadInfo();
     const sheetCategory = doc.sheetsByTitle["categories"];
     if (!sheetCategory) {
