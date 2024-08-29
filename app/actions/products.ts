@@ -1,11 +1,6 @@
 "use server";
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
-import jwt from "../lib/googleApiAuth";
-
-const doc = new GoogleSpreadsheet(
-  process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
-  jwt
-);
+import { sheetDoc } from "../lib/googleFileSheetConection";
 
 interface Products {
   id: string;
@@ -15,6 +10,7 @@ interface Products {
 }
 
 export async function getProducts(): Promise<Products[]> {
+  const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetProducts = doc.sheetsByTitle["products"];
   if (sheetProducts) {
