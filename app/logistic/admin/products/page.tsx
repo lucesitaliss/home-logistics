@@ -1,7 +1,7 @@
-export default function Admin() {
+export default function Products() {
   return (
     <main className="w-full min-h-screen">
-      <div>Add</div>
+      <div>Products</div>
     </main>
   );
 }
