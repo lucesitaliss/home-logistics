@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
+import { BiEditAlt } from "react-icons/bi";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 interface Category {
   id: string;
@@ -30,10 +32,35 @@ export default function Categories() {
       console.error("Error fetching categories:", error);
     }
   };
+
+  const handleEditCategory = async (
+    currentIdCategory: string,
+    newNameCategory: string
+  ) => {
+    // event.preventDefault();
+    const category = {
+      idCategory: currentIdCategory,
+      newNameCategory: newNameCategory,
+    };
+    await fetch("/api/categories/edit-category", {
+      method: "PUT",
+      body: JSON.stringify(category),
+      headers: {
+        "content-Type": "application/json",
+      },
+    });
+  };
   return (
-    <div>
+    <div className="flex flex-col pt-5">
       {categories.map((category) => (
-        <div key={category.id}>{category.name}</div>
+        <div key={category.id} className="flex p-2 gap-2 items-center">
+          <BiEditAlt
+            onClick={() => {
+              handleEditCategory(category.id, "prueba");
+            }}
+          />
+          {category.name}
+        </div>
       ))}
       {isLoading ? (
         <div className="flex justify-center items-center h-screen">
