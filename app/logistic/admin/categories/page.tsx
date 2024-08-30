@@ -1,9 +1,11 @@
-import AddCategory from "../../../ui/admin/addCategory";
+import AddCategory from "../../../ui/admin/categories/addCategory";
+import ListCategories from "../../../ui/admin/categories/listCategories";
+
 export default function Categories() {
   return (
     <main className="w-full min-h-screen p-10">
-      <div>Categories</div>
       <AddCategory />
+      <ListCategories />
     </main>
   );
 }

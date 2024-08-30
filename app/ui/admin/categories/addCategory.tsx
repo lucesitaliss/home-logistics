@@ -22,6 +22,7 @@ export default function FormPrueba() {
       });
       setFormData("");
       alert("Se insertó la Categoria exitosamente!");
+      window.location.reload();
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -29,31 +30,25 @@ export default function FormPrueba() {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8">
-        <h2 className="mb-4 text-2xl">Inserte una nueva Categoria</h2>
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Name:
-          </label>{" "}
+      <form onSubmit={handleSubmit} className=" mx-auto mt-2 flex gap-2">
+        <div className="">
           <input
             type="text"
             id="name"
             name="name"
             value={formData}
             onChange={handleChange}
-            className="w-full border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Nueva Categoria"
+            className=" border rounded-md py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
 
-        <div className="flex items-center justify-center w-full">
+        <div className="flex items-center justify-center ">
           <button
             type="submit"
-            className="flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="px-3 py-1 bg-gray-700 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Submit
+            Agregar
           </button>
         </div>
       </form>
