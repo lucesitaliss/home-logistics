@@ -4,6 +4,7 @@ import { ClipLoader } from "react-spinners";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import EditCategoryModal from "./editCategoryModal";
+import DeleteCategoryModal from "./deleteCategoryModal";
 
 interface Category {
   id: string;
@@ -12,7 +13,11 @@ interface Category {
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [modalCurrenCategory, setModalCurrenCategory] =
+  const [editModalCategory, setEditModalCategory] = useState<Category | null>(
+    null
+  );
+
+  const [deleteModalCategory, deleteEditModalCategory] =
     useState<Category | null>(null);
 
   useEffect(() => {
@@ -35,30 +40,48 @@ export default function Categories() {
       console.error("Error fetching categories:", error);
     }
   };
-  const handleOpenModal = (category: Category) => {
-    setModalCurrenCategory(category);
+  const handleOpenEditModal = (category: Category) => {
+    setEditModalCategory(category);
   };
 
-  const handleClose = () => {
-    setModalCurrenCategory(null);
+  const handleCloseEditModal = () => {
+    setEditModalCategory(null);
+  };
+
+  const handleOpenDeleteModal = (category: Category) => {
+    deleteEditModalCategory(category);
+  };
+
+  const handleCloseDeleteModal = () => {
+    deleteEditModalCategory(null);
   };
 
   return (
     <div className="flex flex-col pt-5">
-      {categories.map((category) => (
-        <div key={category.id} className="flex p-2 gap-2 items-center">
-          <BiEditAlt onClick={() => handleOpenModal(category)} />
-          {modalCurrenCategory?.id === category.id && (
-            <EditCategoryModal
-              isOpen={!!modalCurrenCategory}
-              onClose={handleClose}
-              idCategory={category.id}
-              nameCategory={category.name}
-            />
-          )}
-          {category.name}
-        </div>
-      ))}
+      {Array.isArray(categories) &&
+        categories.map((category) => (
+          <div key={category.id} className="flex p-2 gap-2 items-center">
+            <BiEditAlt onClick={() => handleOpenEditModal(category)} />
+            {editModalCategory?.id === category.id && (
+              <EditCategoryModal
+                isOpen={!!editModalCategory}
+                onClose={handleCloseEditModal}
+                idCategory={category.id}
+                nameCategory={category.name}
+              />
+            )}
+            <RiDeleteBin6Line onClick={() => handleOpenDeleteModal(category)} />
+            {deleteModalCategory?.id === category.id && (
+              <DeleteCategoryModal
+                isOpen={!!deleteModalCategory}
+                onClose={handleCloseDeleteModal}
+                idCategory={category.id}
+                nameCategory={category.name}
+              />
+            )}
+            {category.name}
+          </div>
+        ))}
       {isLoading ? (
         <div className="flex justify-center items-center h-screen">
           <ClipLoader size={50} color={"#123abc"} loading={isLoading} />{" "}
