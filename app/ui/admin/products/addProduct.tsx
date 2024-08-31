@@ -2,7 +2,10 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
 import { capitalize } from "../../utils/capitalize";
-
+import { RiDeleteBin6Line } from "react-icons/ri";
+import DeleteProductModal from "./deleteProductModal";
+import { BiEditAlt } from "react-icons/bi";
+import EditProductModal from "./editProductModal";
 interface Category {
   id: string;
   name: string;
@@ -26,6 +29,12 @@ export default function AddProduct() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [newProductName, setNewProductName] = useState<string>("");
+  const [editModalProduct, setEditModalProduct] = useState<Product | null>(
+    null
+  );
+  const [deleteModalProduct, deleteEditModalProduct] = useState<Product | null>(
+    null
+  );
 
   useEffect(() => {
     fetchCategories();
@@ -106,6 +115,23 @@ export default function AddProduct() {
       console.error("Error submitting form:", error);
     }
   };
+
+  const handleOpenEditModal = (product: Product) => {
+    setEditModalProduct(product);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalProduct(null);
+  };
+
+  const handleOpenDeleteModal = (product: Product) => {
+    deleteEditModalProduct(product);
+  };
+
+  const handleCloseDeleteModal = () => {
+    deleteEditModalProduct(null);
+  };
+
   return (
     <div className="p-4 text-xs sm:text-sm">
       <div className=" flex flex-col  items-start gap-3">
@@ -148,7 +174,27 @@ export default function AddProduct() {
       </div>
       <div className="pt-4">
         {products.map((product) => (
-          <div key={product.id}>{product.name}</div>
+          <div key={product.id} className="flex p-2 gap-2 items-center">
+            <BiEditAlt onClick={() => handleOpenEditModal(product)} />
+            {editModalProduct?.id === product.id && (
+              <EditProductModal
+                isOpen={!!editModalProduct}
+                onClose={handleCloseEditModal}
+                idProduct={product.id}
+                nameProduct={product.name}
+              />
+            )}
+            <RiDeleteBin6Line onClick={() => handleOpenDeleteModal(product)} />
+            {deleteModalProduct?.id === product.id && (
+              <DeleteProductModal
+                isOpen={!!deleteModalProduct}
+                onClose={handleCloseDeleteModal}
+                idProduct={product.id}
+                nameProduct={product.name}
+              />
+            )}
+            {product.name}
+          </div>
         ))}
       </div>
       {isLoading ? (
