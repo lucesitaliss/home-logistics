@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, SyntheticEvent } from "react";
+import { capitalize } from "../../utils/capitalize";
 
 export default function FormPrueba() {
   const [formData, setFormData] = useState<string>("");
 
   const handleChange = (event: SyntheticEvent) => {
     const target = event.target as HTMLInputElement;
-    setFormData(target.value);
+    const nameCategory = capitalize(target.value);
+    setFormData(nameCategory);
   };
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -21,7 +23,6 @@ export default function FormPrueba() {
         },
       });
       setFormData("");
-      alert("Se insertó la Categoria exitosamente!");
       window.location.reload();
     } catch (error) {
       console.error("Error submitting form:", error);

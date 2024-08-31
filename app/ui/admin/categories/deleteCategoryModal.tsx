@@ -33,9 +33,10 @@ const DeleteCategoryModal: React.FC<DeleteCategoryModalProps> = ({
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full">
-        <h2 className="text-xl font-semibold mb-4">
-          Confirma que desea eliminar la categoria "{nameCategory}"
-        </h2>
+        <h3 className="text-lg font-semibold p-8 flex items-center flex-col">
+          Confirma que desea eliminar la categoria:
+          <h2 className="text-2xl flex justify-center">"{nameCategory}"</h2>
+        </h3>
         <form onSubmit={handleDeleteCategory} className="space-y-4">
           <div className="flex justify-end space-x-4">
             <button
