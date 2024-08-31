@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
+import { capitalize } from "../../utils/capitalize";
 
 interface Category {
   id: string;
@@ -13,11 +14,18 @@ interface Product {
   id_category: string;
   checked: boolean;
 }
+
+export interface NewProduct {
+  name: string;
+  idCategory: string;
+}
+
 export default function AddProduct() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategoy] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [newProductName, setNewProductName] = useState<string>("");
 
   useEffect(() => {
     fetchCategories();
@@ -71,16 +79,65 @@ export default function AddProduct() {
       setIsLoading(false);
     }
   }
+
+  const handleChange = (event: SyntheticEvent) => {
+    const target = event.target as HTMLInputElement;
+    const nameCategory = capitalize(target.value);
+    setNewProductName(nameCategory);
+  };
+
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const product: NewProduct = {
+      name: newProductName,
+      idCategory: selectedCategory,
+    };
+    try {
+      await fetch("/api/products/add-product", {
+        method: "POST",
+        body: JSON.stringify(product),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setNewProductName("");
+      //window.location.reload();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
   return (
     <div className="p-4 text-xs sm:text-sm">
-      <div className=" flex gap-2  items-start">
+      <div className=" flex flex-col  items-start gap-3">
+        <form onSubmit={handleSubmit} className="  flex gap-2">
+          <div className="">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={newProductName}
+              onChange={handleChange}
+              placeholder="Nuevo Producto"
+              className=" border rounded-md py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-48"
+            />
+          </div>
+
+          <div className="flex items-center justify-center ">
+            <button
+              type="submit"
+              className="px-3 py-1 bg-gray-700 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Agregar
+            </button>
+          </div>
+        </form>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategoy(e.target.value)}
-          className="border border-gray-100 rounded p-2"
+          className=" border rounded-md py-1 px-2 text-gray-700 leading-tight  h-full w-48"
         >
           {selectedCategory ? null : (
-            <option value=""> Seleccione una Categoria </option>
+            <option value="">Seleccione una Categoria</option>
           )}
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
