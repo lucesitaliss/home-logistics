@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import EditCategoryModal from "./editCategoryModal";
 
 interface Category {
   id: string;
@@ -11,6 +12,8 @@ interface Category {
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [modalCurrenCategory, setModalCurrenCategory] =
+    useState<Category | null>(null);
 
   useEffect(() => {
     fetchCategories();
@@ -32,33 +35,27 @@ export default function Categories() {
       console.error("Error fetching categories:", error);
     }
   };
-
-  const handleEditCategory = async (
-    currentIdCategory: string,
-    newNameCategory: string
-  ) => {
-    // event.preventDefault();
-    const category = {
-      idCategory: currentIdCategory,
-      newNameCategory: newNameCategory,
-    };
-    await fetch("/api/categories/edit-category", {
-      method: "PUT",
-      body: JSON.stringify(category),
-      headers: {
-        "content-Type": "application/json",
-      },
-    });
+  const handleOpenModal = (category: Category) => {
+    setModalCurrenCategory(category);
   };
+
+  const handleClose = () => {
+    setModalCurrenCategory(null);
+  };
+
   return (
     <div className="flex flex-col pt-5">
       {categories.map((category) => (
         <div key={category.id} className="flex p-2 gap-2 items-center">
-          <BiEditAlt
-            onClick={() => {
-              handleEditCategory(category.id, "prueba");
-            }}
-          />
+          <BiEditAlt onClick={() => handleOpenModal(category)} />
+          {modalCurrenCategory?.id === category.id && (
+            <EditCategoryModal
+              isOpen={!!modalCurrenCategory}
+              onClose={handleClose}
+              idCategory={category.id}
+              nameCategory={category.name}
+            />
+          )}
           {category.name}
         </div>
       ))}
