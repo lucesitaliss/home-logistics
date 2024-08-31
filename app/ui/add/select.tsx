@@ -1,9 +1,7 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
-import { getCategoriesId } from "../../lib/googleDatabase";
-import { getSheetFileId } from "../../lib/googleDatabase";
-import { getproductsId } from "../../lib/googleDatabase";
+
 interface Category {
   id: string;
   name: string;
@@ -147,20 +145,13 @@ export default function Select() {
     }
   };
 
-  const prueba = async () => {
-    const cateriesId = await getCategoriesId();
-    const fileId = await getSheetFileId();
-    const productsId = await getproductsId();
-    console.log(fileId, "****", cateriesId, "*****,", productsId);
-  };
-
   return (
     <div className="p-4 text-xs sm:text-sm">
       <div className=" flex gap-2  items-start">
         <select
           value={selectedCategory}
           onChange={handleSelectChange}
-          className="border border-gray-100 rounded"
+          className="border border-gray-100 rounded p-2"
         >
           {selectedCategory ? null : (
             <option value=""> Seleccione una Categoria </option>
@@ -213,7 +204,6 @@ export default function Select() {
       ) : (
         ""
       )}
-      <button onClick={prueba}>prueba</button>
     </div>
   );
 }
