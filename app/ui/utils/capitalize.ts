@@ -1,4 +1,4 @@
 export function capitalize(word: string): string {
-  if (!word) return word; // Verifica que la palabra no esté vacía
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  if (!word) return word;
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }

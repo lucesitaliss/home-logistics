@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
+import { addList } from "@/app/actions/list";
 
 interface Category {
   id: string;
@@ -145,26 +146,41 @@ export default function Select() {
     }
   };
 
+  const createList = async () => {
+    setIsLoading(true);
+    await addList();
+    setIsLoading(false);
+  };
+
   return (
     <div className="p-4 text-xs sm:text-sm">
       <div className=" flex gap-2  items-start">
-        <select
-          value={selectedCategory}
-          onChange={handleSelectChange}
-          className="border border-gray-100 rounded p-2"
-        >
-          {selectedCategory ? null : (
-            <option value=""> Seleccione una Categoria </option>
-          )}
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-
+        <div className="flex gap-2">
+          <select
+            value={selectedCategory}
+            onChange={handleSelectChange}
+            className="border border-gray-100 rounded p-2"
+          >
+            {selectedCategory ? null : (
+              <option value=""> Seleccione una Categoria </option>
+            )}
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={createList}
+            className="px-3 py-1 bg-gray-700 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Agregar a la lista
+          </button>
+        </div>
+      </div>
+      <div className="flex flex-col">
         {products.length > 0 ? (
-          <div className="mb-2">
+          <div className="mt-5 mb-5">
             <label>
               <input
                 className="mr-1"
@@ -178,9 +194,7 @@ export default function Select() {
         ) : (
           ""
         )}
-      </div>
 
-      <div className="pt-4">
         {products.map((product) => (
           <div key={product.id}>
             <label key={product.id}>

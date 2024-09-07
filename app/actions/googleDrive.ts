@@ -297,7 +297,7 @@ export async function createFolderAndSheet(
 
     const firstSheetId = sheetsInfo.sheets[0].properties.sheetId;
 
-    // Crear las hojas "categories" y "products"
+    // Crear las hojas "categories", "products", "list", "historical"
     const createSheetsResponse = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}:batchUpdate`,
       {
@@ -319,6 +319,20 @@ export async function createFolderAndSheet(
               addSheet: {
                 properties: {
                   title: "products",
+                },
+              },
+            },
+            {
+              addSheet: {
+                properties: {
+                  title: "list",
+                },
+              },
+            },
+            {
+              addSheet: {
+                properties: {
+                  title: "historical",
                 },
               },
             },
@@ -391,6 +405,59 @@ export async function createFolderAndSheet(
                 fields: "userEnteredValue",
               },
             },
+            {
+              updateCells: {
+                range: {
+                  sheetId: sheetsMap["list"],
+                  startRowIndex: 0,
+                  startColumnIndex: 0,
+                  endRowIndex: 1,
+                  endColumnIndex: 8,
+                },
+                rows: [
+                  {
+                    values: [
+                      { userEnteredValue: { stringValue: "id" } },
+                      { userEnteredValue: { stringValue: "id_product" } },
+                      { userEnteredValue: { stringValue: "name" } },
+                      { userEnteredValue: { stringValue: "id_category" } },
+                      { userEnteredValue: { stringValue: "unidad" } },
+                      { userEnteredValue: { stringValue: "precio" } },
+                      { userEnteredValue: { stringValue: "total" } },
+                      { userEnteredValue: { stringValue: "comprado" } },
+                    ],
+                  },
+                ],
+                fields: "userEnteredValue",
+              },
+            },
+            {
+              updateCells: {
+                range: {
+                  sheetId: sheetsMap["historical"],
+                  startRowIndex: 0,
+                  startColumnIndex: 0,
+                  endRowIndex: 1,
+                  endColumnIndex: 9,
+                },
+                rows: [
+                  {
+                    values: [
+                      { userEnteredValue: { stringValue: "id" } },
+                      { userEnteredValue: { stringValue: "id_list" } },
+                      { userEnteredValue: { stringValue: "id_product" } },
+                      { userEnteredValue: { stringValue: "name" } },
+                      { userEnteredValue: { stringValue: "id_category" } },
+                      { userEnteredValue: { stringValue: "unidad" } },
+                      { userEnteredValue: { stringValue: "precio" } },
+                      { userEnteredValue: { stringValue: "total" } },
+                      { userEnteredValue: { stringValue: "fecha" } },
+                    ],
+                  },
+                ],
+                fields: "userEnteredValue",
+              },
+            },
           ],
         }),
       }
@@ -423,5 +490,5 @@ export async function createFolderAndSheet(
 
     return { folderId, sheetId };
   }
-  return "La carpeta ya existe";
+  return console.log("La carpeta ya existe");
 }

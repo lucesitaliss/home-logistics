@@ -9,6 +9,49 @@ interface Products {
   checked: boolean;
 }
 
+interface ProductChecked {
+  idProduct: string;
+  checked: boolean;
+}
+
+export interface AddProduct {
+  name: string;
+  idCategory: string;
+}
+
+export async function addProduct(product: AddProduct): Promise<void> {
+  const doc = await sheetDoc();
+  await doc.loadInfo();
+  const sheet = doc.sheetsByTitle["products"];
+  if (sheet) {
+    const rows = await sheet.getRows();
+    let maxId = 0;
+
+    rows.forEach((row: GoogleSpreadsheetRow) => {
+      const rawId = row.get("id") as string;
+      if (rawId) {
+        const currentId = parseInt(rawId, 10);
+        if (!isNaN(currentId) && currentId > maxId) {
+          maxId = currentId;
+        }
+      } else {
+        console.log("No ID found in row:", row);
+      }
+    });
+    const newId = maxId + 1;
+    const id = newId.toString();
+    const data = {
+      id,
+      name: product.name,
+      id_category: product.idCategory,
+      checked: "0",
+    };
+    await sheet.addRow(data);
+  } else {
+    throw new Error('Sheet named "product" not found');
+  }
+}
+
 export async function getProducts(): Promise<Products[]> {
   const doc = await sheetDoc();
   await doc.loadInfo();
@@ -46,6 +89,28 @@ export async function getProductsByCategory(
   }
 }
 
+export async function getProductsChecked(): Promise<Products[]> {
+  const doc = await sheetDoc();
+  await doc.loadInfo();
+  const sheetProducts = doc.sheetsByTitle["products"];
+  if (sheetProducts) {
+    const rows = await sheetProducts.getRows();
+
+    const plainRows = rows.map((row) => ({
+      id: row.get("id"),
+      name: row.get("name"),
+      id_category: row.get("id_category"),
+      checked: row.get("checked"),
+    }));
+    const productsChecked = plainRows.filter(
+      (product) => product.checked === "1"
+    );
+    return productsChecked;
+  } else {
+    throw new Error("No se encontro la hoja Productos de Google Sheet");
+  }
+}
+
 export interface EditProductParams {
   idProduct: string;
   newNameProduct: string;
@@ -76,10 +141,7 @@ export async function editNameProduct(
     throw error;
   }
 }
-interface ProductChecked {
-  idProduct: string;
-  checked: boolean;
-}
+
 export async function editCheckedProduct(
   productChecked: ProductChecked
 ): Promise<void> {
@@ -104,13 +166,6 @@ export async function editCheckedProduct(
   } catch (error) {
     console.error(error);
   }
-}
-
-interface Products {
-  id: string;
-  name: string;
-  id_category: string;
-  checked: boolean;
 }
 
 export async function editCheckedProducts(
@@ -161,42 +216,5 @@ export async function deleteProductById(idProduct: string): Promise<void> {
     }
   } else {
     throw new Error('Sheet named "categories" not found');
-  }
-}
-export interface AddProduct {
-  name: string;
-  idCategory: string;
-}
-
-export async function addProduct(product: AddProduct): Promise<void> {
-  const doc = await sheetDoc();
-  await doc.loadInfo();
-  const sheet = doc.sheetsByTitle["products"];
-  if (sheet) {
-    const rows = await sheet.getRows();
-    let maxId = 0;
-
-    rows.forEach((row: GoogleSpreadsheetRow) => {
-      const rawId = row.get("id") as string;
-      if (rawId) {
-        const currentId = parseInt(rawId, 10);
-        if (!isNaN(currentId) && currentId > maxId) {
-          maxId = currentId;
-        }
-      } else {
-        console.log("No ID found in row:", row);
-      }
-    });
-    const newId = maxId + 1;
-    const id = newId.toString();
-    const data = {
-      id,
-      name: product.name,
-      id_category: product.idCategory,
-      checked: "0",
-    };
-    await sheet.addRow(data);
-  } else {
-    throw new Error('Sheet named "categorias" not found');
   }
 }
