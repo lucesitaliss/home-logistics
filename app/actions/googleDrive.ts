@@ -438,7 +438,7 @@ export async function createFolderAndSheet(
                   startRowIndex: 0,
                   startColumnIndex: 0,
                   endRowIndex: 1,
-                  endColumnIndex: 9,
+                  endColumnIndex: 10,
                 },
                 rows: [
                   {
@@ -448,7 +448,8 @@ export async function createFolderAndSheet(
                       { userEnteredValue: { stringValue: "id_product" } },
                       { userEnteredValue: { stringValue: "name" } },
                       { userEnteredValue: { stringValue: "id_category" } },
-                      { userEnteredValue: { stringValue: "unidad" } },
+                      { userEnteredValue: { stringValue: "cantidad" } },
+                      { userEnteredValue: { stringValue: "medida" } },
                       { userEnteredValue: { stringValue: "precio" } },
                       { userEnteredValue: { stringValue: "total" } },
                       { userEnteredValue: { stringValue: "fecha" } },

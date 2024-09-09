@@ -8,7 +8,8 @@ interface List {
   id_product: string;
   name: string;
   id_category: string;
-  unidad: string;
+  cantidad: string;
+  medida: string;
   precio: string;
   total: string;
   comprado: string;
@@ -57,7 +58,8 @@ export async function addList(): Promise<void> {
         id_product: item.id,
         name: item.name,
         id_category: item.id_category,
-        unidad: "",
+        cantidad: "",
+        medida: "",
         precio: "",
         total: "",
         comprado: "",
@@ -84,7 +86,8 @@ export async function getList(): Promise<List[]> {
       id_product: row.get("id_product") || "",
       name: row.get("name") || "",
       id_category: row.get("id_category") || "",
-      unidad: row.get("unidad") || "",
+      cantidad: row.get("cantidad") || "",
+      medida: row.get("medida") || "",
       precio: row.get("precio") || "",
       total: row.get("total") || "",
       comprado: row.get("comprado") || "",
@@ -98,9 +101,20 @@ export async function getList(): Promise<List[]> {
 
 export async function bought(
   id: string,
-  unidad: number,
-  precio: number
+  cantidad: string,
+  medida: string,
+  precio: string
 ): Promise<void> {
+  const cantidadEntero = parseInt(cantidad, 10);
+  const medidaDecimal = parseFloat(medida);
+  const precioDecimal = parseFloat(precio);
+
+  if (isNaN(cantidadEntero) || isNaN(medidaDecimal) || isNaN(precioDecimal)) {
+    throw new Error(
+      "Error en la conversión de datos. Asegúrate de que cantidad, medida y precio sean números válidos."
+    );
+  }
+
   const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetList = doc.sheetsByTitle["list"];
@@ -111,7 +125,7 @@ export async function bought(
     const rowToUpdate = rowsList.find((row) => row.get("id") === id);
 
     if (rowToUpdate) {
-      const total = unidad * precio;
+      const total = cantidadEntero * medidaDecimal * precioDecimal;
 
       const currencyFormatter = new Intl.NumberFormat("es-AR", {
         style: "currency",
@@ -119,11 +133,11 @@ export async function bought(
       });
 
       // Actualizar los valores de la fila
-      rowToUpdate.set("unidad", unidad);
-      rowToUpdate.set("precio", currencyFormatter.format(precio));
+      rowToUpdate.set("cantidad", cantidadEntero);
+      rowToUpdate.set("medida", medidaDecimal);
+      rowToUpdate.set("precio", currencyFormatter.format(precioDecimal));
       rowToUpdate.set("total", currencyFormatter.format(total));
       rowToUpdate.set("comprado", "1");
-
       // Guardar los cambios en la hoja de cálculo
       await rowToUpdate.save();
     } else {
