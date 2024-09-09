@@ -19,6 +19,7 @@ export default function List() {
   }, []);
 
   const [list, setList] = useState<List[]>([]);
+  const [listModal, setLisModal] = useState(null);
 
   async function fetchList() {
     const dataFechList = await getList();
