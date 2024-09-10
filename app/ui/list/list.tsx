@@ -36,14 +36,27 @@ export default function List() {
     setLisModal(list);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (updateList: List | null) => {
+    if (updateList) {
+      setList((prevList) =>
+        prevList.map((product) =>
+          product.id === updateList.id ? updateList : product
+        )
+      );
+    }
     setLisModal(null);
   };
 
   return (
     <div>
       {list.map((productList) => (
-        <div key={productList.id} onClick={() => handleOpenModal(productList)}>
+        <div
+          className={
+            productList.comprado === "1" ? "line-through" : "no-underline"
+          }
+          key={productList.id}
+          onClick={() => handleOpenModal(productList)}
+        >
           {productList.name}
         </div>
       ))}
@@ -54,6 +67,8 @@ export default function List() {
           onClose={handleCloseModal}
           idList={listModal.id}
           nameProductList={listModal.name}
+          idProduct={listModal.id_product}
+          idCategory={listModal.id_category}
         />
       )}
 
