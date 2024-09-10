@@ -101,19 +101,15 @@ export async function getList(): Promise<List[]> {
 
 export async function bought(
   id: string,
-  cantidad: string,
-  medida: string,
-  precio: string
+  cantidad: number,
+  medida: number,
+  precio: number
 ): Promise<void> {
-  const cantidadEntero = parseInt(cantidad, 10);
-  const medidaDecimal = parseFloat(medida);
-  const precioDecimal = parseFloat(precio);
-
-  if (isNaN(cantidadEntero) || isNaN(medidaDecimal) || isNaN(precioDecimal)) {
-    throw new Error(
-      "Error en la conversión de datos. Asegúrate de que cantidad, medida y precio sean números válidos."
-    );
-  }
+  // if (isNaN(cantidadEntero) || isNaN(medidaDecimal) || isNaN(precioDecimal)) {
+  //   throw new Error(
+  //     "Error en la conversión de datos. Asegúrate de que cantidad, medida y precio sean números válidos."
+  //   );
+  // }
 
   const doc = await sheetDoc();
   await doc.loadInfo();
@@ -125,7 +121,8 @@ export async function bought(
     const rowToUpdate = rowsList.find((row) => row.get("id") === id);
 
     if (rowToUpdate) {
-      const total = cantidadEntero * medidaDecimal * precioDecimal;
+      // const total = cantidadEntero * medidaDecimal * precioDecimal;
+      const total = cantidad * medida * precio;
 
       const currencyFormatter = new Intl.NumberFormat("es-AR", {
         style: "currency",
@@ -133,9 +130,9 @@ export async function bought(
       });
 
       // Actualizar los valores de la fila
-      rowToUpdate.set("cantidad", cantidadEntero);
-      rowToUpdate.set("medida", medidaDecimal);
-      rowToUpdate.set("precio", currencyFormatter.format(precioDecimal));
+      rowToUpdate.set("cantidad", cantidad);
+      rowToUpdate.set("medida", medida);
+      rowToUpdate.set("precio", currencyFormatter.format(precio));
       rowToUpdate.set("total", currencyFormatter.format(total));
       rowToUpdate.set("comprado", "1");
       // Guardar los cambios en la hoja de cálculo

@@ -45,22 +45,22 @@ export default function List() {
       {list.map((productList) => (
         <div key={productList.id} onClick={() => handleOpenModal(productList)}>
           {productList.name}
-          {listModal?.id === productList.id && (
-            <BoughtListModal
-              isOpen={!!listModal}
-              onClose={handleCloseModal}
-              idList={productList.id}
-              nameProductList={productList.name}
-            />
-          )}
         </div>
       ))}
-      {isLoading ? (
+
+      {listModal && (
+        <BoughtListModal
+          isOpen={!!listModal}
+          onClose={handleCloseModal}
+          idList={listModal.id}
+          nameProductList={listModal.name}
+        />
+      )}
+
+      {isLoading && (
         <div className="flex justify-center items-center h-screen">
-          <ClipLoader size={50} color={"#123abc"} loading={isLoading} />{" "}
+          <ClipLoader size={50} color={"#123abc"} loading={isLoading} />
         </div>
-      ) : (
-        ""
       )}
     </div>
   );
