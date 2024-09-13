@@ -2,10 +2,8 @@
 
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { sheetDoc } from "../lib/googleFileSheetConection";
-interface Category {
-  id: string;
-  name: string;
-}
+import { Category } from "./types";
+import { EditCategoryParams } from "./types";
 
 export async function getCategories(): Promise<Category[]> {
   const doc = await sheetDoc();
@@ -69,10 +67,6 @@ export async function deleteCategoryById(idCategory: string): Promise<void> {
   } else {
     throw new Error('Sheet named "categories" not found');
   }
-}
-export interface EditCategoryParams {
-  idCategory: string;
-  newNameCategory: string;
 }
 
 export async function editCategory(

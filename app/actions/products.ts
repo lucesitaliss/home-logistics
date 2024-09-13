@@ -1,23 +1,10 @@
 "use server";
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
 import { sheetDoc } from "../lib/googleFileSheetConection";
-
-interface Products {
-  id: string;
-  name: string;
-  id_category: string;
-  checked: boolean;
-}
-
-interface ProductChecked {
-  idProduct: string;
-  checked: boolean;
-}
-
-export interface AddProduct {
-  name: string;
-  idCategory: string;
-}
+import { Product } from "./types";
+import { ProductChecked } from "./types";
+import { AddProduct } from "./types";
+import { Category } from "./types";
 
 export async function addProduct(product: AddProduct): Promise<void> {
   const doc = await sheetDoc();
@@ -52,7 +39,7 @@ export async function addProduct(product: AddProduct): Promise<void> {
   }
 }
 
-export async function getProducts(): Promise<Products[]> {
+export async function getProducts(): Promise<Product[]> {
   const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetProducts = doc.sheetsByTitle["products"];
@@ -73,7 +60,7 @@ export async function getProducts(): Promise<Products[]> {
 
 export async function getProductsByCategory(
   id_category: string
-): Promise<Products[]> {
+): Promise<Product[]> {
   if (id_category) {
     const products = await getProducts();
     if (products) {
@@ -89,7 +76,21 @@ export async function getProductsByCategory(
   }
 }
 
-export async function getProductsChecked(): Promise<Products[]> {
+export async function getProductsByCategories() {
+  const products = await getProducts();
+  if (!products) {
+    throw new Error("No se encontro la hoja Productos de Google Sheet");
+  }
+  const productsByCategories = products.reduce((acc, product) => {
+    if (!acc[product.id_category]) {
+      acc[product.id_category] = [];
+    }
+    acc[product.id_category].push(product);
+    return acc;
+  }, {} as Record<string, Product[]>);
+}
+
+export async function getProductsChecked(): Promise<Product[]> {
   const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetProducts = doc.sheetsByTitle["products"];
@@ -169,7 +170,7 @@ export async function editCheckedProduct(
 }
 
 export async function editCheckedProducts(
-  productsChecked: Products[]
+  productsChecked: Product[]
 ): Promise<void> {
   try {
     // Crear diccionario con productos chequeados y convertirlo a formato string con 0 y 1

@@ -2,18 +2,7 @@
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
 import { sheetDoc } from "../lib/googleFileSheetConection";
 import { getProductsChecked } from "./products";
-
-interface List {
-  id: string;
-  id_product: string;
-  name: string;
-  id_category: string;
-  cantidad: string;
-  medida: string;
-  precio: string;
-  total: string;
-  comprado: string;
-}
+import { IList } from "./types";
 
 export async function addList(): Promise<void> {
   const doc = await sheetDoc();
@@ -73,7 +62,7 @@ export async function addList(): Promise<void> {
   }
 }
 
-export async function getList(): Promise<List[]> {
+export async function getList(): Promise<IList[]> {
   const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetList = doc.sheetsByTitle["list"];
@@ -81,7 +70,7 @@ export async function getList(): Promise<List[]> {
   if (sheetList) {
     const rowsList = await sheetList.getRows();
 
-    const productList: List[] = rowsList.map((row) => ({
+    const productList: IList[] = rowsList.map((row) => ({
       id: row.get("id") || "",
       id_product: row.get("id_product") || "",
       name: row.get("name") || "",
@@ -143,4 +132,19 @@ export async function bought(
   } else {
     throw new Error('No se encontró la hoja "list" en Google Sheets');
   }
+}
+
+export async function ListProductsByCategory() {
+  const productsList = await getList();
+  if (!productsList) {
+    throw new Error(`Could not get shopping list`);
+  }
+  const productListByCategories = productsList.reduce((acc, productList) => {
+    if (!acc[productList.id_category]) {
+      acc[productList.id_category] = [];
+    }
+    acc[productList.id_category].push(productList);
+    return acc;
+  }, {} as Record<string, IList[]>);
+  return productListByCategories;
 }

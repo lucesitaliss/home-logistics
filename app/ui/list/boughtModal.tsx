@@ -1,21 +1,11 @@
 "use client";
 import { bought } from "@/app/actions/list";
 import { useState } from "react";
+import { IList } from "@/app/actions/types";
 
-interface List {
-  id: string;
-  id_product: string;
-  name: string;
-  id_category: string;
-  cantidad: string;
-  medida: string;
-  precio: string;
-  total: string;
-  comprado: string;
-}
 interface ListModalProps {
   isOpen: boolean;
-  onClose: (updateList: List | null) => void;
+  onClose: (updateList: IList | null) => void;
   idList: string;
   nameProductList: string;
   idProduct: string;
