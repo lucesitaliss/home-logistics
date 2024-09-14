@@ -2,6 +2,8 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
 import { addList } from "@/app/actions/list";
+import { unCheckProducts } from "@/app/actions/products";
+import { useRouter } from "next/navigation";
 
 interface Category {
   id: string;
@@ -30,6 +32,8 @@ export default function Select() {
     fetchProducts();
     setIsLoading(true);
   }, [selectedCategory]);
+
+  const router = useRouter();
 
   async function fetchCategories() {
     try {
@@ -149,7 +153,9 @@ export default function Select() {
   const createList = async () => {
     setIsLoading(true);
     await addList();
+    await unCheckProducts();
     setIsLoading(false);
+    router.push("/logistic/list");
   };
 
   return (

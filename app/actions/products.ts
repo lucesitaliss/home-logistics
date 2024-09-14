@@ -203,6 +203,26 @@ export async function editCheckedProducts(
   }
 }
 
+export async function unCheckProducts(): Promise<void> {
+  try {
+    const doc = await sheetDoc();
+    await doc.loadInfo();
+
+    const sheetProducts = doc.sheetsByTitle["products"];
+    if (!sheetProducts) {
+      throw new Error('Sheet "Products" not found');
+    }
+
+    const rowsProducts = await sheetProducts.getRows();
+    for (const row of rowsProducts) {
+      row.set("checked", "0");
+      await row.save();
+    }
+  } catch (error) {
+    console.error("Error updating products:", error);
+  }
+}
+
 export async function deleteProductById(idProduct: string): Promise<void> {
   const doc = await sheetDoc();
   await doc.loadInfo();
