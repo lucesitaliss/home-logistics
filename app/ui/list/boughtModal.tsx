@@ -1,5 +1,4 @@
 "use client";
-import { bought } from "@/app/actions/list";
 import { useState } from "react";
 import { IList } from "@/app/lib/types";
 
@@ -33,7 +32,19 @@ const BoughtListModal: React.FC<ListModalProps> = ({
     setIsLoading(true);
 
     try {
-      await bought(idList, cantidad, Number(medida), Number(precio));
+      const propsBought = {
+        idList,
+        cantidad,
+        medida: Number(medida),
+        precio: Number(precio),
+      };
+      await fetch("/api/list/set-bought", {
+        method: "PUT",
+        body: JSON.stringify(propsBought),
+        headers: {
+          "content-Type": "application/json",
+        },
+      });
 
       const updateList = {
         id: idList,

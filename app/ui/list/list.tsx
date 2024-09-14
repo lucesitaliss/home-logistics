@@ -74,14 +74,11 @@ export default function List() {
   const handleCloseModal = (updateList: IList | null) => {
     if (updateList) {
       setList((prevList) => {
-        // Hacemos una copia de la lista previa
         const updatedListProduct = { ...prevList };
 
-        // Actualizamos la categoría específica
         updatedListProduct[updateList.id_category] = prevList[
           updateList.id_category
         ].map((productList) => {
-          // Si el id del producto coincide con el actualizado, lo reemplazamos
           return productList.id === updateList.id ? updateList : productList;
         });
         return updatedListProduct;
@@ -110,9 +107,9 @@ export default function List() {
                 className=" text-xl pl-3 bg-slate-300  m-1"
                 onClick={() => toggleCategoryVisibility(category.id)}
               >
-                {`${category.name} ${
-                  visibleCategories[category.id] ? "ᐃ" : "ᐁ"
-                }`}
+                {`${visibleCategories[category.id] ? "ᐃ" : "ᐁ"}  ${
+                  category.name
+                } `}
               </h2>
               {visibleCategories[category.id] && (
                 <ul>

@@ -81,7 +81,7 @@ export async function getList(): Promise<IList[]> {
   }
 }
 
-export async function bought(
+export async function setBought(
   id: string,
   cantidad: number,
   medida: number,
@@ -104,13 +104,12 @@ export async function bought(
         currency: "ARS",
       });
 
-      // Actualizar los valores de la fila
       rowToUpdate.set("cantidad", cantidad);
       rowToUpdate.set("medida", medida);
       rowToUpdate.set("precio", currencyFormatter.format(precio));
       rowToUpdate.set("total", currencyFormatter.format(total));
       rowToUpdate.set("comprado", "1");
-      // Guardar los cambios en la hoja de cálculo
+
       await rowToUpdate.save();
     } else {
       throw new Error(`No se encontró la fila con el ID: ${id}`);
