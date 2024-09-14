@@ -16,6 +16,19 @@ export default function List() {
   const [list, setList] = useState<Record<string, IList[]>>({});
   const [listModal, setLisModal] = useState<IList | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [visibleCategories, setVisibleCategories] = useState<
+    Record<string, boolean>
+  >({});
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      const initialVisibility = categories.reduce((acc, category) => {
+        acc[category.id] = true;
+        return acc;
+      }, {} as Record<string, boolean>);
+      setVisibleCategories(initialVisibility);
+    }
+  }, [categories]);
 
   async function fetchCategories() {
     try {
@@ -67,8 +80,15 @@ export default function List() {
     setLisModal(null);
   };
 
+  const toggleCategoryVisibility = (categoryId: string) => {
+    setVisibleCategories((prevVisibleCategories) => ({
+      ...prevVisibleCategories,
+      [categoryId]: !prevVisibleCategories[categoryId],
+    }));
+  };
+
   return (
-    <div>
+    <div className="m-3">
       {Array.isArray(categories) ? (
         categories
           .filter(
@@ -76,22 +96,31 @@ export default function List() {
           )
           .map((category) => (
             <div key={category.id}>
-              <h2 className="bg-slate-200 ">{category.name}</h2>
-              <ul>
-                {list[category.id]?.map((productList) => (
-                  <li
-                    key={productList.id}
-                    onClick={() => handleOpenModal(productList)}
-                    className={
-                      productList.comprado === "1"
-                        ? "line-through"
-                        : "no-underline"
-                    }
-                  >
-                    {productList.name}
-                  </li>
-                ))}
-              </ul>
+              <h2
+                className=" text-xl pl-3 bg-slate-300  m-1"
+                onClick={() => toggleCategoryVisibility(category.id)}
+              >
+                {`${category.name} ${
+                  visibleCategories[category.id] ? "ᐃ" : "ᐁ"
+                }`}
+              </h2>
+              {visibleCategories[category.id] && (
+                <ul>
+                  {list[category.id]?.map((productList) => (
+                    <li
+                      key={productList.id}
+                      onClick={() => handleOpenModal(productList)}
+                      className={`${
+                        productList.comprado === "1"
+                          ? "line-through"
+                          : "no-underline"
+                      } ml-4 bg-slate-100 m-1`}
+                    >
+                      {productList.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))
       ) : (
