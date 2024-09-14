@@ -2,8 +2,8 @@
 
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { sheetDoc } from "../lib/googleFileSheetConection";
-import { Category } from "./types";
-import { EditCategoryParams } from "./types";
+import { Category } from "../lib/types";
+import { EditCategoryParams } from "../lib/types";
 
 export async function getCategories(): Promise<Category[]> {
   const doc = await sheetDoc();

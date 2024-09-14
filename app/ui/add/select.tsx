@@ -1,21 +1,8 @@
 "use client";
 import { useState, useEffect, SyntheticEvent } from "react";
 import { ClipLoader } from "react-spinners";
-import { addList } from "@/app/actions/list";
-import { unCheckProducts } from "@/app/actions/products";
 import { useRouter } from "next/navigation";
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  id_category: string;
-  checked: boolean;
-}
+import { Category } from "@/app/lib/types";
 
 export default function Select() {
   const [isLoading, setIsLoading] = useState(true);
@@ -152,8 +139,25 @@ export default function Select() {
 
   const createList = async () => {
     setIsLoading(true);
-    await addList();
-    await unCheckProducts();
+    await fetch("/api/list/add-list", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    const unCheckProductsFetch = await fetch(
+      "/api/products/un-check-products",
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+    if (!unCheckProductsFetch.ok) {
+      throw new Error("Error when changing the checked of the product");
+    }
     setIsLoading(false);
     router.push("/logistic/list");
   };

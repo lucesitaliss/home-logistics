@@ -1,7 +1,7 @@
 "use client";
 import { bought } from "@/app/actions/list";
 import { useState } from "react";
-import { IList } from "@/app/actions/types";
+import { IList } from "@/app/lib/types";
 
 interface ListModalProps {
   isOpen: boolean;

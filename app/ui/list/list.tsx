@@ -1,10 +1,9 @@
 "use client";
-import { ListProductsByCategory } from "@/app/actions/list";
 import { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners";
 import BoughtListModal from "./boughtModal";
-import { IList } from "@/app/actions/types";
-import { Category } from "@/app/actions/types";
+import { IList } from "@/app/lib/types";
+import { Category } from "@/app/lib/types";
 
 export default function List() {
   useEffect(() => {
@@ -51,11 +50,22 @@ export default function List() {
   }
 
   async function fetchList() {
-    const dataFechList = await ListProductsByCategory();
-    if (dataFechList) {
-      setList(dataFechList);
-      setIsLoading(false);
+    const dataFechList = await fetch(
+      "/api/list/get-list-products-by-categories",
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+    if (!dataFechList.ok) {
+      throw new Error("Error fetching List");
     }
+    const filteredProductListByCategories = await dataFechList.json();
+
+    setList(filteredProductListByCategories);
+    setIsLoading(false);
   }
   const handleOpenModal = (list: IList) => {
     setLisModal(list);

@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import { addProduct } from "@/app/actions/products";
+import { addList } from "@/app/actions/list";
 
 export async function POST(req: Request) {
   try {
-    const product = await req.json();
-    await addProduct(product);
+    await addList();
     return NextResponse.json({ message: "Success save data" });
   } catch (error) {
     console.error(error);

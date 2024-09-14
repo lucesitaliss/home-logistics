@@ -1,8 +1,8 @@
 "use server";
-import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
+import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { sheetDoc } from "../lib/googleFileSheetConection";
 import { getProductsChecked } from "./products";
-import { IList } from "./types";
+import { IList } from "../lib/types";
 
 export async function addList(): Promise<void> {
   const doc = await sheetDoc();
@@ -13,7 +13,6 @@ export async function addList(): Promise<void> {
     const rowsList = await sheetList.getRows();
     let maxId = 0;
 
-    // Encontrar el ID máximo actual en la hoja
     rowsList.forEach((row: GoogleSpreadsheetRow) => {
       const rawId = row.get("id") as string;
       if (rawId) {
@@ -25,21 +24,17 @@ export async function addList(): Promise<void> {
         console.log("No ID found in row:", row);
       }
     });
-    // Obtener todos los id_product ya en la lista
+
     const existingProducts = rowsList.map((row) => row.get("id_product"));
 
-    // Obtener los productos chequeados
     const productChecked = await getProductsChecked();
 
-    // Filtrar los productos que no están ya en la lista
     const productsToAdd = productChecked.filter(
       (product) => !existingProducts.includes(product.id)
     );
 
-    // Agregar solo los productos que no están en la lista
-
     for (const item of productsToAdd) {
-      const newId = ++maxId; // Incrementar el ID para cada nuevo objeto
+      const newId = ++maxId;
       const id = newId.toString();
 
       const data = {
@@ -54,7 +49,6 @@ export async function addList(): Promise<void> {
         comprado: "",
       };
 
-      // Agregar cada objeto a la hoja como una nueva fila
       await sheetList.addRow(data);
     }
   } else {
@@ -69,7 +63,6 @@ export async function getList(): Promise<IList[]> {
 
   if (sheetList) {
     const rowsList = await sheetList.getRows();
-
     const productList: IList[] = rowsList.map((row) => ({
       id: row.get("id") || "",
       id_product: row.get("id_product") || "",
@@ -127,7 +120,7 @@ export async function bought(
   }
 }
 
-export async function ListProductsByCategory() {
+export async function getListProductsByCategories() {
   const productsList = await getList();
   if (!productsList) {
     throw new Error(`Could not get shopping list`);

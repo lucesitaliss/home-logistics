@@ -1,10 +1,9 @@
 "use server";
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
 import { sheetDoc } from "../lib/googleFileSheetConection";
-import { Product } from "./types";
-import { ProductChecked } from "./types";
-import { AddProduct } from "./types";
-import { Category } from "./types";
+import { Product } from "../lib/types";
+import { ProductChecked } from "../lib/types";
+import { AddProduct } from "../lib/types";
 
 export async function addProduct(product: AddProduct): Promise<void> {
   const doc = await sheetDoc();
