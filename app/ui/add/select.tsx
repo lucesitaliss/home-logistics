@@ -146,18 +146,6 @@ export default function Select() {
       },
     });
 
-    const unCheckProductsFetch = await fetch(
-      "/api/products/un-check-products",
-      {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-    if (!unCheckProductsFetch.ok) {
-      throw new Error("Error when changing the checked of the product");
-    }
     setIsLoading(false);
     router.push("/logistic/list");
   };

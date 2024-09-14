@@ -5,6 +5,7 @@ import BoughtListModal from "./boughtModal";
 import { IList } from "@/app/lib/types";
 import { Category } from "@/app/lib/types";
 import { deleteShoppingList } from "@/app/actions/list";
+import { addHistorical } from "@/app/actions/historical";
 
 export default function List() {
   useEffect(() => {
@@ -96,7 +97,7 @@ export default function List() {
   };
 
   const clean = async () => {
-    await deleteShoppingList();
+    await addHistorical();
     window.location.reload();
   };
 

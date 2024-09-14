@@ -169,8 +169,6 @@ export async function deleteShoppingList(): Promise<void> {
         await row.delete();
       }
     }
-
-    console.log("Productos comprados eliminados exitosamente.");
   } catch (error) {
     console.error("Error eliminando productos comprados:", error);
   }

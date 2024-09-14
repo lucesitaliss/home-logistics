@@ -4,6 +4,7 @@ import { sheetDoc } from "../lib/googleFileSheetConection";
 import { Product } from "../lib/types";
 import { ProductChecked } from "../lib/types";
 import { AddProduct } from "../lib/types";
+import { shoppingList } from "./list";
 
 export async function addProduct(product: AddProduct): Promise<void> {
   const doc = await sheetDoc();
@@ -209,13 +210,23 @@ export async function unCheckProducts(): Promise<void> {
 
     const sheetProducts = doc.sheetsByTitle["products"];
     if (!sheetProducts) {
-      throw new Error('Sheet "Products" not found');
+      throw new Error('Sheet "products" not found');
     }
 
     const rowsProducts = await sheetProducts.getRows();
+
+    const purchasedProducts = await shoppingList();
+
+    const purchasedProductIds = new Set(
+      purchasedProducts.map((product) => product.id_product)
+    );
+
     for (const row of rowsProducts) {
-      row.set("checked", "0");
-      await row.save();
+      const rowProductId = row.get("id");
+      if (purchasedProductIds.has(rowProductId)) {
+        row.set("checked", "0");
+        await row.save();
+      }
     }
   } catch (error) {
     console.error("Error updating products:", error);
