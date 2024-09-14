@@ -94,12 +94,6 @@ export async function bought(
   medida: number,
   precio: number
 ): Promise<void> {
-  // if (isNaN(cantidadEntero) || isNaN(medidaDecimal) || isNaN(precioDecimal)) {
-  //   throw new Error(
-  //     "Error en la conversión de datos. Asegúrate de que cantidad, medida y precio sean números válidos."
-  //   );
-  // }
-
   const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetList = doc.sheetsByTitle["list"];
@@ -110,12 +104,11 @@ export async function bought(
     const rowToUpdate = rowsList.find((row) => row.get("id") === id);
 
     if (rowToUpdate) {
-      // const total = cantidadEntero * medidaDecimal * precioDecimal;
       const total = cantidad * medida * precio;
 
       const currencyFormatter = new Intl.NumberFormat("es-AR", {
         style: "currency",
-        currency: "ARS", // Puedes cambiar 'ARS' por el código de la moneda que necesites (por ejemplo, USD, EUR, etc.)
+        currency: "ARS",
       });
 
       // Actualizar los valores de la fila
@@ -146,5 +139,12 @@ export async function ListProductsByCategory() {
     acc[productList.id_category].push(productList);
     return acc;
   }, {} as Record<string, IList[]>);
-  return productListByCategories;
+
+  const filteredProductListByCategories = Object.fromEntries(
+    Object.entries(productListByCategories).filter(
+      ([key, products]) => products.length > 0
+    )
+  );
+
+  return filteredProductListByCategories;
 }

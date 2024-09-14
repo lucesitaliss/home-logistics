@@ -29,6 +29,7 @@ export default function List() {
         throw new Error("Error fetching categories");
       }
       const categoriesData = await categoriesRespone.json();
+
       setCategories(categoriesData);
       setIsLoading(false);
     } catch (error) {
@@ -69,26 +70,30 @@ export default function List() {
   return (
     <div>
       {Array.isArray(categories) ? (
-        categories.map((category) => (
-          <div key={category.id}>
-            <h2 className="bg-slate-200 ">{category.name}</h2>
-            <ul>
-              {list[category.id]?.map((productList) => (
-                <li
-                  key={productList.id}
-                  onClick={() => handleOpenModal(productList)}
-                  className={
-                    productList.comprado === "1"
-                      ? "line-through"
-                      : "no-underline"
-                  }
-                >
-                  {productList.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
+        categories
+          .filter(
+            (category) => list[category.id] && list[category.id].length > 0
+          )
+          .map((category) => (
+            <div key={category.id}>
+              <h2 className="bg-slate-200 ">{category.name}</h2>
+              <ul>
+                {list[category.id]?.map((productList) => (
+                  <li
+                    key={productList.id}
+                    onClick={() => handleOpenModal(productList)}
+                    className={
+                      productList.comprado === "1"
+                        ? "line-through"
+                        : "no-underline"
+                    }
+                  >
+                    {productList.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
       ) : (
         <p>No categories available</p>
       )}
