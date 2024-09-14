@@ -4,6 +4,7 @@ import { ClipLoader } from "react-spinners";
 import BoughtListModal from "./boughtModal";
 import { IList } from "@/app/lib/types";
 import { Category } from "@/app/lib/types";
+import { deleteShoppingList } from "@/app/actions/list";
 
 export default function List() {
   useEffect(() => {
@@ -94,8 +95,21 @@ export default function List() {
     }));
   };
 
+  const clean = async () => {
+    await deleteShoppingList();
+    window.location.reload();
+  };
+
   return (
     <div className="m-3">
+      {!isLoading && (
+        <button
+          onClick={clean}
+          className="px-3 py-1 bg-gray-700 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Limpiar
+        </button>
+      )}
       {Array.isArray(categories) ? (
         categories
           .filter(

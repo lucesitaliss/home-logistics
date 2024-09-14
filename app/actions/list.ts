@@ -140,3 +140,38 @@ export async function getListProductsByCategories() {
 
   return filteredProductListByCategories;
 }
+
+export async function shoppingList() {
+  const list = await getList();
+  if (!list) {
+    throw new Error('No se encontró la hoja "list" en Google Sheets');
+  }
+
+  const shoppingList = list.filter(
+    (productList) => productList.comprado === "1"
+  );
+  return shoppingList;
+}
+
+export async function deleteShoppingList(): Promise<void> {
+  try {
+    const doc = await sheetDoc();
+    await doc.loadInfo();
+
+    const sheetProducts = doc.sheetsByTitle["list"];
+    if (!sheetProducts) {
+      throw new Error('Sheet "Products" not found');
+    }
+
+    const rowsProducts = await sheetProducts.getRows();
+    for (let row of rowsProducts) {
+      if (row.get("comprado") === "1") {
+        await row.delete();
+      }
+    }
+
+    console.log("Productos comprados eliminados exitosamente.");
+  } catch (error) {
+    console.error("Error eliminando productos comprados:", error);
+  }
+}
