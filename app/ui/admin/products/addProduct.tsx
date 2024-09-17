@@ -133,7 +133,7 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="p-4 text-xs sm:text-sm">
+    <div className=" p-10 text-xs sm:text-sm">
       <div className=" flex flex-col  items-start gap-3">
         <form onSubmit={handleSubmit} className="  flex gap-2">
           <div className="">
