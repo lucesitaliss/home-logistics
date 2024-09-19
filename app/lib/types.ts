@@ -33,6 +33,8 @@ export interface IList {
   cantidad: string;
   medida: string;
   precio: string;
-  total: string;
+  precioTotal: string;
+  precioKg: string;
+  kgTotal: string;
   comprado: string;
 }

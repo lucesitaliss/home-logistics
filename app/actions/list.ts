@@ -71,7 +71,9 @@ export async function getList(): Promise<IList[]> {
       cantidad: row.get("cantidad") || "",
       medida: row.get("medida") || "",
       precio: row.get("precio") || "",
-      total: row.get("total") || "",
+      precioTotal: row.get("precio_total") || "",
+      precioKg: row.get("precio_kg") || "",
+      kgTotal: row.get("kg_total") || "",
       comprado: row.get("comprado") || "",
     }));
 
@@ -97,7 +99,9 @@ export async function setBought(
     const rowToUpdate = rowsList.find((row) => row.get("id") === id);
 
     if (rowToUpdate) {
-      const total = cantidad * medida * precio;
+      const precioKg = precio / medida;
+      const total = cantidad * precio;
+      const kgTotal = cantidad * medida;
 
       const currencyFormatter = new Intl.NumberFormat("es-AR", {
         style: "currency",
@@ -107,7 +111,9 @@ export async function setBought(
       rowToUpdate.set("cantidad", cantidad);
       rowToUpdate.set("medida", medida);
       rowToUpdate.set("precio", currencyFormatter.format(precio));
-      rowToUpdate.set("total", currencyFormatter.format(total));
+      rowToUpdate.set("precio_total", currencyFormatter.format(total));
+      rowToUpdate.set("precio_kg", currencyFormatter.format(precioKg));
+      rowToUpdate.set("kg_total", kgTotal);
       rowToUpdate.set("comprado", "1");
 
       await rowToUpdate.save();

@@ -147,7 +147,7 @@ export default function Select() {
     });
 
     setIsLoading(false);
-    router.push("/logistic/list");
+    router.push("/logistic");
   };
 
   return (

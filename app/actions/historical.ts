@@ -51,7 +51,9 @@ export async function addHistorical(): Promise<void> {
         cantidad: item.cantidad,
         medida: item.medida,
         precio: item.precio,
-        total: item.total,
+        precio_total: item.precioTotal,
+        precio_kg: item.precioKg,
+        kg_total: item.kgTotal,
         fecha: formattedDate,
       };
 
