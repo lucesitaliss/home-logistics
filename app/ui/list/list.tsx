@@ -4,7 +4,6 @@ import { ClipLoader } from "react-spinners";
 import BoughtListModal from "./boughtModal";
 import { IList } from "@/app/lib/types";
 import { Category } from "@/app/lib/types";
-import { deleteShoppingList } from "@/app/actions/list";
 import { addHistorical } from "@/app/actions/historical";
 
 export default function List() {
@@ -97,7 +96,15 @@ export default function List() {
   };
 
   const clean = async () => {
+    setIsLoading(true);
     await addHistorical();
+    // await fetch("/api/historical/add-historical", {
+    //   method: "POST",
+    //   headers: {
+    //     "content-type": "application/json",
+    //   },
+    // });
+    setIsLoading(false);
     window.location.reload();
   };
 

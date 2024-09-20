@@ -31,36 +31,37 @@ export async function addHistorical(): Promise<void> {
 
     const shoppingListData = await shoppingList();
 
-    const listToAdd = shoppingListData.filter(
-      (list) => !existingProducts.includes(list.id)
-    );
-
     const today = new Date();
     const formattedDate = today.toLocaleDateString("es-ES");
+    try {
+      for (const item of shoppingListData) {
+        const newId = ++maxId;
+        const id = newId.toString();
 
-    for (const item of listToAdd) {
-      const newId = ++maxId;
-      const id = newId.toString();
+        const data = {
+          id: id,
+          id_list: item.id,
+          id_product: item.id_product,
+          name: item.name,
+          id_category: item.id_category,
+          cantidad: item.cantidad,
+          medida: item.medida,
+          precio: item.precio,
+          precio_total: item.precioTotal,
+          precio_kg: item.precioKg,
+          kg_total: item.kgTotal,
+          fecha: formattedDate,
+        };
 
-      const data = {
-        id: id,
-        id_list: item.id,
-        id_product: item.id_product,
-        name: item.name,
-        id_category: item.id_category,
-        cantidad: item.cantidad,
-        medida: item.medida,
-        precio: item.precio,
-        precio_total: item.precioTotal,
-        precio_kg: item.precioKg,
-        kg_total: item.kgTotal,
-        fecha: formattedDate,
-      };
+        await sheethistorical.addRow(data);
+      }
+      await unCheckProducts();
+      await deleteShoppingList();
+    } catch (error) {
+      console.error("Error during the loop:", error);
 
-      await sheethistorical.addRow(data);
+      throw new Error("Error adding rows to historical sheet");
     }
-    await unCheckProducts();
-    await deleteShoppingList();
   } else {
     throw new Error('Sheet named "list" not found');
   }
