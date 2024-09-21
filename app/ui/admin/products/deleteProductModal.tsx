@@ -27,7 +27,6 @@ const DeleteProductModal: React.FC<DeleteProductModalProps> = ({
       },
     });
     onClose();
-    window.location.reload();
   };
 
   return (

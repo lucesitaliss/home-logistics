@@ -9,6 +9,8 @@ interface ListModalProps {
   nameProductList: string;
   idProduct: string;
   idCategory: string;
+  cantidadp: string;
+  medidap: string;
 }
 
 const BoughtListModal: React.FC<ListModalProps> = ({
@@ -18,14 +20,22 @@ const BoughtListModal: React.FC<ListModalProps> = ({
   nameProductList,
   idProduct,
   idCategory,
+  cantidadp,
+  medidap,
 }) => {
-  const [cantidad, setCantidad] = useState<number>(1);
-  const [medida, setMedida] = useState<number | string>("");
+  if (!isOpen) return null;
+
+  const [cantidad, setCantidad] = useState<number | string>(cantidadp);
+  const [medida, setMedida] = useState<number | string>(medidap);
   const [precio, setPrecio] = useState<number | string>("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = async () => {
-    if (isNaN(cantidad) || isNaN(Number(medida)) || isNaN(Number(precio))) {
+    if (
+      isNaN(Number(cantidad)) ||
+      isNaN(Number(medida)) ||
+      isNaN(Number(precio))
+    ) {
       alert("Por favor, ingresa valores numéricos válidos.");
       return;
     }
@@ -48,23 +58,23 @@ const BoughtListModal: React.FC<ListModalProps> = ({
 
       const updateList = {
         id: idList,
+        id_product: idProduct,
         name: nameProductList,
+        id_category: idCategory,
         cantidad: cantidad.toString(),
         medida: medida.toString(),
         precio: precio.toString(),
+        precioTotal: "",
+        precioKg: "",
+        kgTotal: "",
         comprado: "1",
-        id_category: idCategory,
-        total: "",
-        id_product: idProduct,
       };
       setIsLoading(false);
       onClose(updateList);
     } catch (error) {
       alert("Hubo un error al intentar guardar los datos");
-      setIsLoading(false);
     }
   };
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
@@ -87,22 +97,20 @@ const BoughtListModal: React.FC<ListModalProps> = ({
               <div className="flex flex-col items-center">
                 <label>Cant</label>
                 <input
-                  placeholder="Cant"
                   type="number"
                   value={cantidad}
                   onChange={(e) => setCantidad(Number(e.target.value))}
-                  className="mt-1 p-2 block border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm w-12"
+                  className="mt-1 p-2 block border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-700  focus:border-slate-700  sm:text-sm w-12"
                 ></input>
               </div>
 
               <div className="flex flex-col items-center">
                 <label>Medida</label>
                 <input
-                  placeholder="Medida"
                   type="number"
                   value={medida}
                   onChange={(e) => setMedida(e.target.value)}
-                  className="mt-1 p-2 block border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm w-[85px]"
+                  className="mt-1 p-2 block border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-700  focus:border-slate-700  sm:text-sm w-[85px]"
                 ></input>
               </div>
 

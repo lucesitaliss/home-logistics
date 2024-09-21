@@ -34,7 +34,6 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       },
     });
     onClose();
-    window.location.reload();
   };
   const handleChange = (event: SyntheticEvent) => {
     const target = event.target as HTMLInputElement;

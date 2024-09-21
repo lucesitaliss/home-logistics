@@ -27,8 +27,6 @@ export async function addHistorical(): Promise<void> {
       }
     });
 
-    const existingProducts = rowshistorical.map((row) => row.get("id_list"));
-
     const shoppingListData = await shoppingList();
 
     const today = new Date();

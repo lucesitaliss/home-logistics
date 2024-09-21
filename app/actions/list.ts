@@ -179,3 +179,45 @@ export async function deleteShoppingList(): Promise<void> {
     console.error("Error eliminando productos comprados:", error);
   }
 }
+
+export async function updateMultipleProducts(
+  products: {
+    id: string;
+    cantidad: number;
+    medida: number;
+    precio: number;
+  }[]
+): Promise<void> {
+  const doc = await sheetDoc();
+  await doc.loadInfo();
+  const sheetList = doc.sheetsByTitle["list"];
+
+  if (sheetList) {
+    const rowsList = await sheetList.getRows();
+
+    const currencyFormatter = new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+    });
+
+    for (const product of products) {
+      const rowToUpdate = rowsList.find((row) => row.get("id") === product.id);
+
+      if (rowToUpdate) {
+        const precioKg = product.precio / product.medida;
+        const total = product.cantidad * product.precio;
+        const kgTotal = product.cantidad * product.medida;
+
+        rowToUpdate.set("cantidad", product.cantidad);
+        rowToUpdate.set("medida", product.medida);
+        rowToUpdate.set("kg_total", kgTotal);
+
+        await rowToUpdate.save();
+      } else {
+        console.warn(`No se encontró la fila con el ID: ${product.id}`);
+      }
+    }
+  } else {
+    throw new Error('No se encontró la hoja "list" en Google Sheets');
+  }
+}

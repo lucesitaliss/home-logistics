@@ -102,15 +102,21 @@ export default function AddProduct() {
       idCategory: selectedCategory,
     };
     try {
-      await fetch("/api/products/add-product", {
+      const response = await fetch("/api/products/add-product", {
         method: "POST",
         body: JSON.stringify(product),
         headers: {
           "Content-Type": "application/json",
         },
       });
+
+      if (!response.ok) {
+        throw new Error("Error adding product");
+      }
+
       setNewProductName("");
-      //window.location.reload();
+
+      await fetchProducts();
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -120,7 +126,8 @@ export default function AddProduct() {
     setEditModalProduct(product);
   };
 
-  const handleCloseEditModal = () => {
+  const handleCloseEditModal = async () => {
+    await fetchProducts();
     setEditModalProduct(null);
   };
 
@@ -128,7 +135,8 @@ export default function AddProduct() {
     deleteEditModalProduct(product);
   };
 
-  const handleCloseDeleteModal = () => {
+  const handleCloseDeleteModal = async () => {
+    await fetchProducts();
     deleteEditModalProduct(null);
   };
 
