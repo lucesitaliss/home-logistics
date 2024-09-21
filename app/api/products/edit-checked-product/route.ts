@@ -3,15 +3,14 @@ import { editCheckedProduct } from "@/app/actions/products";
 
 export async function PUT(req: Request) {
   try {
-    const url = new URL(req.url);
-    const idProduct = url.searchParams.get("id_product");
-    if (!idProduct) {
+    const productChecked = await req.json();
+    if (!productChecked) {
       return NextResponse.json(
-        { error: "Product id is required" },
+        { error: "Product  is required" },
         { status: 404 }
       );
     }
-    const changeChecked = await editCheckedProduct(idProduct);
+    await editCheckedProduct(productChecked);
     return NextResponse.json({ status: 200 });
   } catch (error) {
     console.error(error);

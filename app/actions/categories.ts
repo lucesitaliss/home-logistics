@@ -1,19 +1,12 @@
 "use server";
 
-import { GoogleSpreadsheet, GoogleSpreadsheetRow } from "google-spreadsheet";
-import jwt from "../lib/googleSheet";
-
-const doc = new GoogleSpreadsheet(
-  process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
-  jwt
-);
-
-interface Category {
-  id: string;
-  name: string;
-}
+import { GoogleSpreadsheetRow } from "google-spreadsheet";
+import { sheetDoc } from "../lib/googleFileSheetConection";
+import { Category } from "../lib/types";
+import { EditCategoryParams } from "../lib/types";
 
 export async function getCategories(): Promise<Category[]> {
+  const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetCategories = doc.sheetsByTitle["categories"];
 
@@ -30,6 +23,7 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function addCategory(nameCategory: string): Promise<void> {
+  const doc = await sheetDoc();
   await doc.loadInfo();
   const sheet = doc.sheetsByTitle["categories"];
   if (sheet) {
@@ -60,6 +54,7 @@ export async function addCategory(nameCategory: string): Promise<void> {
 }
 
 export async function deleteCategoryById(idCategory: string): Promise<void> {
+  const doc = await sheetDoc();
   await doc.loadInfo();
   const sheetCategory = doc.sheetsByTitle["categories"];
   if (sheetCategory) {
@@ -73,16 +68,13 @@ export async function deleteCategoryById(idCategory: string): Promise<void> {
     throw new Error('Sheet named "categories" not found');
   }
 }
-export interface EditCategoryParams {
-  idCategory: string;
-  newNameCategory: string;
-}
 
 export async function editCategory(
   category: EditCategoryParams
 ): Promise<void> {
   try {
     const { idCategory, newNameCategory } = category;
+    const doc = await sheetDoc();
     await doc.loadInfo();
     const sheetCategory = doc.sheetsByTitle["categories"];
     if (!sheetCategory) {

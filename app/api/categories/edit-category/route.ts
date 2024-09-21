@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { editCategory, EditCategoryParams } from "@/app/actions/categories";
+import { editCategory } from "@/app/actions/categories";
+import { EditCategoryParams } from "@/app/lib/types";
 
 export async function PUT(req: Request) {
   try {

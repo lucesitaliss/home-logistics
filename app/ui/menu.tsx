@@ -12,7 +12,7 @@ export default async function Menu() {
     <div className="bg-gray-700 p-2  justify-around text-white">
       <div className="flex justify-center sm:justify-end gap-3 text-xs sm:text-sm items-center">
         <form action={doGoogleLogout}>
-          <button type="submit">Signin Out</button>
+          <button type="submit">Logout</button>
         </form>
         <p className="hidden sm:block">{session?.user?.name}</p>
         {session?.user?.image && (
@@ -26,10 +26,10 @@ export default async function Menu() {
         )}
       </div>
       <div className="flex  justify-center gap-5 sm:gap-10 text-xs sm:text-sm">
-        <Link href="/logistic/home">Inicio</Link>
-        <Link href="/logistic/list">Lista</Link>
+        <Link href="/logistic/">Lista</Link>
         <Link href="/logistic/add">Agregar</Link>
         <Link href="/logistic/admin">Admin</Link>
+        <Link href="/logistic/data">Datos</Link>
       </div>
     </div>
   );
